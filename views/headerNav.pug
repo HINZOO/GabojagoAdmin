@@ -1,0 +1,45 @@
+nav.navbar.navbar-expand-lg.bg-danger-subtle
+    div.container-fluid
+        a.navbar-brand(href="/") Gabojago ADMIN
+        button.navbar-toggler(data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent")
+            span.navbar-toggler-icon
+        div#navbarSupportedContent.collapse.navbar-collapse
+            ul.navbar-nav.me-auto.mb-2.mb-lg-0
+                li.nav-item.dropdown
+                    a.nav-link(href="#" ) 공지사항
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown") 유저관리
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="/users/list.do") 리스트
+                        li
+                            a.dropdown-item(href="/users/insert.do") 등록
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown") 게시글관리
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="#") 가보자고
+
+                        li
+                            a.dropdown-item(href="#") 같이놀자
+                        li
+                            a.dropdown-item(href="#") 상품판매
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown") 문의신고
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="#") 문의게시판
+                        li
+                            a.dropdown-item(href="#") 신고
+
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown") 발송
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="#") 문의게시판
+            div#loginCont
+                if(!loginUser)
+                    a.btn.btn-outline-secondary(href="/users/login.do") 로그인
+                else
+                    a.text-secondary.me-2(href=`/users/${loginUser.u_id}/detail.do`)=`(${loginUser.u_id}) ${loginUser.name}`
+                    a.text-secondary(href="/users/logout.do") 로그아웃
