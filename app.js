@@ -40,7 +40,7 @@ app.use(function(err, req, res, next) {
 
 app.use('/', indexRouter);
 
-app.listen(3000,()=>{
-  console.log("http://localhost:3000 gabojago Admin page")
+app.listen(4000,()=>{
+  console.log("http://localhost:4000 gabojago Admin page")
 });
 module.exports = app;
