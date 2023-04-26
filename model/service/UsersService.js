@@ -2,16 +2,7 @@ const sequelize=require("../SequelizePool");
 const usersEntity=require("../entity/UsersEntity")(sequelize);
 const {Op, where}=require("sequelize");
 class UsersService{
-    /*    findByUidAndPwSql="SELECT * FROM users WHERE u_id=? AND pw=? AND permission='ADMIN'";
-    findByAllSql="SELECT * FROM users LIMIT ?,?";
-    findByPermissionSql="SELECT * FROM users WHERE permission=? LIMIT ?,?";
-    findByUidSql="SELECT * FROM users WHERE u_id=?";
-    updateSql="UPDATE users SET pw=?,name=?,nk_name=?,email=?,birth=?,phone=?,address=?,detail_address=?,pr_content=?,mbti=?,img_path=?,store_name=?,business_id=? WHERE u_id=?";
-    updatePermissionSql="UPDATE users SET permission=? WHERE u_id=?";
-    insertSql="INSERT INTO users (u_id,nk_name,pw,name,phone,img_path,email,birth,address,detail_address,store_name,business_id,mbti,permission) value(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    deleteSql="DELETE FROM users WHERE u_id=?";
-*/
-    async list(permission,page=1){
+     async list(permission,page=1){
         let limit=10;
         const whereObj={};
         if(permission!=null){

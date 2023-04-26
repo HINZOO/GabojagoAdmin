@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+    div.centered
+        div.d-flex.justify-content-center.align-items-center
+            div.my-4
+                h1 GABOJAGO ADMIN PAGE
+                p 가보자고 관리자 페이지 입니다.
+                form#loginForm(method='post' action='/users/login.do' style='width:500px')
+                    div.form-floating.mb-3
+                        input#u_id.form-control(name='u_id' type='text' placeholder='')
+                        label(for='u_id') 아이디
+                    div.form-floating.mb-3
+                        input#pw.form-control(name='pw' type='password' placeholder='')
+                        label(for='pw') 비밀번호
+                    div.text-end.mb-5
+                        button#addUserBtn.btn.btn-outline-primary(type='submit') 로그인

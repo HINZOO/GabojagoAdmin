@@ -1,13 +1,21 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const createError = require('http-errors');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const cookieEncrypt = require('cookie-encrypter');
+const crypto=require('crypto');
+const cookiePw=crypto.createHash("md5").update("cookeiPw123@").digest("hex");
+const logger = require('morgan');
+const session=require('express-session');
+const MemoryStore=require("memorystore")(session);
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
-var app = express();
+
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const userService = require("./model/service/UsersService");
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -16,8 +24,36 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser(cookiePw));
+app.use(cookieEncrypt(cookiePw));
+
+app.use(express.static(path.join(__dirname, 'public')));//정적리소스위치
+
+app.use(session({
+  secret:'my-secret-key',
+  resave:false,
+  saveUninitialized:true,
+  store: new MemoryStore({
+    checkPeriod:2*60*60*1000
+  })
+}));
+
+app.use(async function(req, res, next){
+  let{autoLoginId,autoLoginPw}=req.signedCookies;
+  if(autoLoginId&&autoLoginPw){
+    const userService=require("./model/service/UsersService");
+    const user=await userService.login(autoLoginId,autoLoginPw);
+    if(user) req.session.loginUser=user;
+  }
+  next();
+})
+
+app.use(async function(req, res, next){
+  res.locals.loginUser=req.session.loginUser;
+  next();
+})
+
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -38,7 +74,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.use('/', indexRouter);
+
 
 app.listen(4000,()=>{
   console.log("http://localhost:4000 gabojago Admin page")

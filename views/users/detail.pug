@@ -1,0 +1,69 @@
+extends ../layout
+
+block content
+    div.my-5
+
+        form(name="detail" action="./update.do" method="get" style="width: 600px;margin: 0 auto;")
+          h3.my-4
+            i.bi.bi-person-bounding-box.text-primary
+            span #{user.name}님의 기본정보
+          div.row
+            div.p-3.card.col
+                div.d-flex.align-items-center.card-body.col
+                    div#imgBox.me-5.m-0
+                        img.border.rounded-circle.col-12(src="https://item.kakaocdn.net/do/b9df681f72876cbace33e39bb375f0ea15b3f4e3c2033bfd702a321ec6eda72c")
+
+                    div.card-text.col-8
+                      p
+                        span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2.mb-2 아이디
+                        span.ms-4 #{user.u_id}
+                      p
+                        span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 이름
+                        span.ms-4 #{user.name}
+                      p
+                        span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 닉네임
+                        span.ms-4 #{user.nk_name}
+                      p.mb-1
+                        span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 이메일
+                        span.ms-4 #{user.email}
+
+
+                hr
+                div.d-flex.justify-content-center
+                    small.me-3
+                        span.text-primary 팔로워
+                        span.ms-1 4명
+                    small
+                        span.text-primary 팔로워
+                        span.ms-1 9명
+                p.text-secondary.text-center.mb-0 #{user.pr_content}
+                hr
+                p.mt-3
+                    span.bg-danger.bg-opacity-50.text-white.rounded-4.p-2 유저등급
+                    span.ms-4 #{user.permission}
+                p.mt-3
+                  span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 MBTI
+                  span.ms-4 #{user.mbti}
+                p.my-3
+                    span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 생일
+                    span.ms-4 #{user.birth}
+                p.my-3
+                    span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 핸드폰
+                    span.ms-4 #{user.phone}
+                p.my-3
+                    span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 주소
+                    span.ms-4 #{user.address}
+                    span.ms-1 #{user.detail_address}
+                p.my-3
+                    span.bg-primary.bg-opacity-50.text-white.rounded-4.p-2 가입일
+                    span.ms-4 #{user.post_time.toLocaleDateString("ko")}
+                p.my-3
+                    span.bg-success.bg-opacity-50.text-white.rounded-4.p-2 가게이름
+                    span.ms-4 #{user.store_name}
+                p.my-3
+                    span.bg-success.bg-opacity-50.text-white.rounded-4.p-2 사업자번호
+                    span.ms-4 #{user.business_id}
+
+                p.text-end.my-3
+                    a.btn.btn-outline-primary(href=`/users/${user.uId}/update.do`) 회원정보 수정
+
