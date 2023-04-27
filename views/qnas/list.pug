@@ -4,6 +4,7 @@ block content
     table.table.text-center
         thead
             tr
+                th(scope="col") 글번호
                 th(scope="col") 유저명
                 th(scope="col") 제목
                 th(scope="col") 작성일
@@ -12,6 +13,7 @@ block content
             each qna in qnas
 
                 tr
+                    th(scope="row") #{qna.q_id}
                     th(scope="row") #{qna.u_id}
                     th(scope="row") #{qna.title}
                     th(scope="row") #{qna.post_time ? qna.post_time.toLocaleDateString("ko") : ''}

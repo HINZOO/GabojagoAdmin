@@ -24,7 +24,7 @@ router.get("/:qId/delete.do",async(req,res)=>{
     let del=0
     let errMsg="";
     try{
-        del=await userService.remove(req.params.qId)
+        del=await qnaService.remove(req.params.qId)
 
     }catch(e){
         console.error(e)
