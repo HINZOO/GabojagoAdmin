@@ -1,5 +1,6 @@
 const sequelize=require("../SequelizePool");
 const usersEntity=require("../entity/UsersEntity")(sequelize);
+const followsEntity=require("../entity/FollowEntity")(sequelize);
 const {Op, where}=require("sequelize");
 const PageVo=require("../vo/PageVo");
 class UsersService{
@@ -32,8 +33,13 @@ class UsersService{
             new Error(e);
         }
     }
-    async detail(uId){
-        return await usersEntity.findByPk(uId);
+    async detail(uId) {
+        return await usersEntity.findOne({
+            where:
+                {
+                    u_id: uId,
+                }
+        });
     }
 
     async login(uId, pw) {
