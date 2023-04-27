@@ -28,7 +28,7 @@ block content
                     th(scope="row") #{user.permission}
                     th(scope="row")
                         a.btn.btn-sm.btn-outline-dark.me-1(href=`/users/${user.u_id}/detail.do`) 상세
-                        a.btn.btn-sm.btn-outline-danger 삭제
+                        a.btn.btn-sm.btn-outline-danger(href=`/users/${user.u_id}/delete.do`) 삭제
 
     -const pageVo = users.pageVo;
     include ../pagination

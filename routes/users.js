@@ -49,23 +49,97 @@ router.get('/list.do', async function(req, res) {
     res.redirect("/users/list.do")
   }
 });
+
+
 //📁 회원상세
 router.get('/:uId/detail.do',async (req,res)=>{
   const user=await userService.detail(req.params.uId);
   if(user){
-    res.render("users/detail",{user:user})
+    res.render("users/detail",{user:user,params:req.query})
   }else{
     res.redirect("/users/list.do");
   }
 });
 
+//📁 회원등록
+router.get("/insert.do",(req,res)=>{
+  res.render("users/insert");
+});
+router.post("/insert.do",async (req,res)=>{
+  let insertUser=null;
+  const reqBody=nullifyEmptyStrings(req.body);
+  try {
+    insertUser=await userService.register(reqBody);
+  }catch (e) {
+    console.error(e);
+    req.flash("actionMsg","회원등록 실패 :"+e.message)
+  }
+  if(insertUser){
+    req.flash("actionMsg","회원등록 성공");
+    res.redirect(`/users/${insertUser.u_id}/detail.do`);
+  }else{
+    res.redirect("/users/insert.do");
+  }
+});
+
 //📁 회원수정
 router.get('/:uId/update.do',async (req,res)=>{
-  const user=await userService.detail(req.params.uId);
+  const uId=req.params.uId;
+  console.log(req.params);
+  const user=await userService.detail(uId);
   if(user){
     res.render("users/update",{user:user})
   }else{
-    res.redirect(`/${req.params.uId}/detail.do`);//여기 파라미터 안넘어감..
+    res.redirect(`/users/${uId}/detail.do`);//여기 파라미터 안넘어감..
   }
 });
+router.post("/update.do", async (req,res)=>{
+  let update=0;
+  try{
+    const reqBody=nullifyEmptyStrings(req.body);
+    update=await userService.modify(reqBody);
+  }catch (e) {
+    console.error(e)
+  }
+  if(update>0){
+    req.flash(success,"수정에 성공하였습니다.")
+    res.redirect(`/users/${req.body.u_id}/detail.do`)
+  }else{
+
+    res.redirect(`/users/${req.body.u_id}/detail.do`)
+  }
+});
+
+//📁 회원삭제
+router.get("/:uId/delete.do",async(req,res)=>{
+  let del=0
+  let errMsg="";
+  try{
+      del=await userService.remove(req.params.uId)
+
+  }catch(e){
+    console.error(e)
+    errMsg=e.message
+  }
+  if(del>0){
+    //메세지구현 찾아보기
+    //회원삭제 성공
+    res.redirect("/users/list.do")
+  }else{
+    //회원삭제 실패
+    res.redirect("/users/list.do")
+  }
+})
+
+
+function nullifyEmptyStrings(reqBody) { //"" or "  " 파라미터 null 처리
+  const result = {};
+
+  for (const [key, value] of Object.entries(reqBody)) {
+    result[key] = value.trim() === '' ? null : value;
+  }
+
+  return result;
+}
+
 module.exports=router;
