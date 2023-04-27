@@ -2,15 +2,21 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 
 module.exports = (sequelize) =>{
-    const Qna = sequelize.define('QnaEntity',{
+    const qnasEntity = sequelize.define('qnasEntity',{
         q_id: {
-            type: DataTypes.INTEGER(),
+            type:DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             primaryKey: true
         },
         u_id: {
             type: DataTypes.STRING(255),
             allowNull: false,
+            references:{
+                model:"usersEntity",
+                key:"u_id",
+                onDelete:"CASCADE",
+                onUpdate:"CASCADE"
+            }
         },
         title: {
             type:DataTypes.STRING(255),
@@ -25,11 +31,12 @@ module.exports = (sequelize) =>{
             allowNull: true
         },
         post_time: {
-            type: DataTypes.DATE,
-            allowNull: false
+            type:DataTypes.DATE,
+            defaultValue:Sequelize.literal("CURRENT_TIMESTAMP")
         }
     }, {
         timestamps: false,
         tableName: 'qnas' // 테이블 이름
     });
+    return qnasEntity;
 };

@@ -5,7 +5,7 @@ const PageVo=require("../vo/PageVo");
 class UsersService{
     async list(reqParams){
         const whereObj={};
-<<<<<<< HEAD
+
         if(permission!=null){
             whereObj["permission"]=permission;
         }
@@ -14,7 +14,7 @@ class UsersService{
             where: whereObj,
             offset:(page-1)*limit,
             limit :limit}); // limit offset,rowLength;
-=======
+
         const orderArr=[];
         if(reqParams.field && reqParams.value){
             whereObj[reqParams.field]={[Op.like]:`%${reqParams.value}%`};
@@ -41,7 +41,7 @@ class UsersService{
         }catch (e) {
             new Error(e);
         }
->>>>>>> 664044b011c53cdcfc08c744d40482a2346690d5
+
     }
     async detail(uId){
         return await usersEntity.findByPk(uId);

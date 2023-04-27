@@ -41,7 +41,7 @@ router.get('/list.do', async function(req, res) {
     users=await userService.list(req.query);
   }catch (e) {
     new Error(e);
-    req.flash("actionMsg","검색 실패:"+e.message);
+    //req.flash("actionMsg","검색 실패:"+e.message);
   }
   if(users){
     res.render("users/list",{users:users,params:req.query});

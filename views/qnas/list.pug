@@ -1,5 +1,4 @@
 extends ../layout
-
 block content
     h2.m-4 문의게시판 관리
     table.table.text-center
@@ -13,10 +12,9 @@ block content
                 th(scope="col") 등급
                 th(scope="col") 관리
         tbody
-            each user in users
-                each qna in qnas
+            each qna in qnas
                 tr
-                    th(scope="row") #{user.u_id}
+                    th(scope="row") #{qna.u_id}
                     th(scope="row") #{user.name}
                     th(scope="row") #{qna.post_time.toLocaleDateString("ko")}
                     th(scope="row") #{qna.title}
@@ -25,3 +23,6 @@ block content
                     th(scope="row")
                         a.btn.btn-sm.btn-outline-dark.me-1(href=`/qnas/${user.u_id}/detail.do`) 상세
                         a.btn.btn-sm.btn-outline-danger 삭제
+
+    -const pageVo = qnas.pageVo;
+    include ../pagination
