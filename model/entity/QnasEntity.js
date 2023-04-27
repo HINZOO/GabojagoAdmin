@@ -11,12 +11,6 @@ module.exports = (sequelize) =>{
         u_id: {
             type: DataTypes.STRING(255),
             allowNull: false,
-            references:{
-                model:"usersEntity",
-                key:"u_id",
-                onDelete:"CASCADE",
-                onUpdate:"CASCADE"
-            }
         },
         title: {
             type:DataTypes.STRING(255),

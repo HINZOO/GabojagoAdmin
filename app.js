@@ -13,14 +13,10 @@ const MemoryStore=require("memorystore")(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-<<<<<<< HEAD
+
 const userService = require("./model/service/UsersService");
 const qnasRouter=require('./routes/qnas');
 const qnaService = require("./model/service/QnasService");
-
-=======
->>>>>>> origin
-
 const app = express();
 
 // view engine setup

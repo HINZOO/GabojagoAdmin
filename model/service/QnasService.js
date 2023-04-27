@@ -29,19 +29,31 @@ class QnasService{
             order:[orderArr]
         })
         try {
-            const users= await qnasEntity.findAll({
+            const qnas= await qnasEntity.findAll({
                 offset:pageVo.offset,
                 limit:pageVo.rowLength,
                 where:whereObj,
                 order:[orderArr]
             })
             qnas.pageVo=pageVo;
+            console.log(qnas)
             return qnas;
         }catch (e) {
             new Error(e);
         }
 
     }
+    async detail(qId){
+        return await qnasEntity.findByPk(qId);
+    }
+    async remove(qId){
+        try {
+            return await qnasEntity.destroy({where:{q_id:qId}});
+        }catch (e) {
+            throw new Error(e);
+        }
+    }
+
 }
 module.exports=new QnasService();
 
