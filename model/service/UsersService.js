@@ -7,8 +7,8 @@ class UsersService{
         const whereObj={};
         if(permission!=null){
             whereObj["permission"]=permission;
-
         }
+
         return await usersEntity.findAll({
             where: whereObj,
             offset:(page-1)*limit,
