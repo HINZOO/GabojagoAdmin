@@ -7,12 +7,19 @@ block content
                         .card-header.d-flex.justify-content-between.align-items-center.bg-light.position-sticky.top-0(style="z-index: 999")
 
                             div.card-title.col-8
-                                p
-                                    span.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-1 아이디
-                                    span.ms-4 #{qna.u_id}
-                                p
-                                    span.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-1 제목
-                                    span.ms-4 #{qna.title}
-                                p
-                                    span.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-1 작성일
-                                    span.ms-4 #{qna.post_time}
+                                table.table
+                                    tr
+                                        th(scope="col").bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-2.me-4 아이디
+                                        th(scope="col").ms-4 #{qna.u_id}
+                                    tr
+                                        th.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-2.me-4 제목
+                                        th.ms-4 #{qna.title}
+                                    tr
+                                        th.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-2.me-4 작성일
+                                        th.ms-4.text-muted #{qna.post_time}
+
+
+                        th.ms-4.ms-4 #{qna.title}
+
+
+
