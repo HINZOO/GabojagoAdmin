@@ -18,8 +18,8 @@ block content
                     th(scope="row") #{qna.title}
                     th(scope="row") #{qna.post_time ? qna.post_time.toLocaleDateString("ko") : ''}
                     th(scope="row")
-                        a.btn.btn-sm.btn-outline-dark.me-1(href=`/qnas/${qna.u_id}/detail.do`) 상세
-                        a.btn.btn-sm.btn-outline-danger(href=`/qnas/${qna.u_id}/delete.do`) 삭제
+                        a.btn.btn-sm.btn-outline-dark.me-1(href=`/qnas/${qna.q_id}/detail.do`) 상세
+                        a.btn.btn-sm.btn-outline-danger(href=`/qnas/${qna.q_id}/delete.do`) 삭제
 
     -const pageVo = qnas.pageVo;
     include ../pagination
