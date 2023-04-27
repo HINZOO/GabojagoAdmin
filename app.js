@@ -13,7 +13,6 @@ const MemoryStore=require("memorystore")(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const userService = require("./model/service/UsersService");
 
 const app = express();
 
@@ -37,6 +36,8 @@ app.use(session({
     checkPeriod:2*60*60*1000
   })
 }));
+const flash = require('connect-flash');
+app.use(flash());
 
 app.use(async function(req, res, next){
   let{autoLoginId,autoLoginPw}=req.signedCookies;
@@ -47,11 +48,28 @@ app.use(async function(req, res, next){
   }
   next();
 })
-
-app.use(async function(req, res, next){
-  res.locals.loginUser=req.session.loginUser;
+app.use(function (req, res, next){
+  const actionMsg = req.flash("actionMsg")[0]; //호출과 즉시 세션에서 삭제함
+  console.log(actionMsg);
+  if (actionMsg) {
+    res.locals.actionMsg = actionMsg;
+  }
+  //redirect 되는 페이지까지만 유지되는 세션으로 action 성공 실패 메세지를 pug 에 렌더함
+  if(req.session.loginUser)res.locals.loginUser=req.session.loginUser;
   next();
-})
+});
+
+/*app.use( function (req, res, next ){
+  if(req.path==="/" || req.path==="/users/login.do" ){
+    next();
+  }else{
+    if(req.session.loginUser){
+      next();
+    }else{
+      res.redirect("/users/login.do");
+    }
+  }
+});*/
 
 
 

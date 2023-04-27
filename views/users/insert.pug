@@ -1,0 +1,73 @@
+extends ../layout
+
+block content
+    form(name="update", action="/users/insert.do", method="post", style="width: 500px;margin: 0 auto;")
+        h1.my-4 회원등록
+        p.form-floating
+            input#uIdInput(type="text", name="u_id", class="form-control", placeholder="??")
+            label 아이디
+        p.form-floating
+            input(type="password", name="pw" class="form-control", placeholder="??" )
+            label 비밀번호
+
+        p.form-floating
+            input(type="text", name="name", class="form-control", placeholder="??")
+            label 이름
+        p.form-floating
+            input(type="text", name="nk_name", class="form-control", placeholder="??")
+            label 닉네임
+        p.form-floating
+            input(type="text", name="email", class="form-control", placeholder="??")
+            label 이메일
+        p.form-floating
+            input(type="date", name="birth", class="form-control", placeholder="??")
+            label 생일
+        p.form-floating
+            input(type="text", name="phone", class="form-control", placeholder="??")
+            label 핸드폰
+        p.form-floating
+            input(type="text", name="address", class="form-control", placeholder="??")
+            label 주소
+        p.form-floating
+            input(type="text", name="detail_address", class="form-control", placeholder="??")
+            label 주소상세
+        p.form-floating
+            input(type="text", name="pr_content", class="form-control", placeholder="??")
+            label 자기소개
+        p.form-floating
+            select(name="mbti", class="form-control")
+                option(value="ISTJ") ISTJ
+                option(value="ISTP") ISTP
+                option(value="ISFJ") ISFJ
+                option(value="ISFP") ISFP
+                option(value="INTJ") INTJ
+                option(value="INTP") INTP
+                option(value="INFJ") INFJ
+                option(value="INFP") INFP
+                option(value="ESTJ") ESTJ
+                option(value="ESTP") ESTP
+                option(value="ESFJ") ESFJ
+                option(value="ESFP") ESFP
+                option(value="ENTJ") ENTJ
+                option(value="ENTP") ENTP
+                option(value="ENFJ") ENFJ
+                option(value="ENFP") ENFP
+            label MBTI
+        p.input-group.mb-3
+            input.form-control(type='file' name='imgPath' placeholder='??')
+            label.input-group-text 프로필
+        p.form-floating.mb-3
+            select.form-control(name='permission')
+                option(value='USER') 일반회원
+                option(value='PARTNER') 파트너
+                option(value='ADMIN') 관리자
+            label 권한
+        p.form-floating.mb-3
+            input.form-control(type='text' name='store_name'  placeholder='??')
+            label 상호명
+        p.form-floating.mb-3
+            input.form-control(type='text' name='business_id' placeholder='??')
+            label  사업자번호
+        p.text-end
+            button.btn.btn-outline-warning(type='reset') 초기화
+            button.btn.btn-outline-primary(type='submit') 확인
