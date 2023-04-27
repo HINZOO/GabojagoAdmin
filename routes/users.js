@@ -31,14 +31,25 @@ router.post("/login.do",async (req,res)=>{
 })
 
 
-
-router.get('/list.do', async function(req, res, next) {
-  let permission=req.query.permission;
-  let page=parseInt(req.query.page) || 1 ;
-  const users=await userService.list(permission,1);
-  res.render("users/list",{users:users,params:req.query});
+//📁 리스트 출력
+router.get('/list.do', async function(req, res) {
+  req.query.page = parseInt(req.query.page) || 1;
+  req.query.orderField = req.query.orderField || "post_time";
+  req.query.orderDirect = req.query.orderDirect || "DESC";
+  let users=null;
+  try {
+    users=await userService.list(req.query);
+  }catch (e) {
+    new Error(e);
+    req.flash("actionMsg","검색 실패:"+e.message);
+  }
+  if(users){
+    res.render("users/list",{users:users,params:req.query});
+  }else {
+    res.redirect("/users/list.do")
+  }
 });
-
+//📁 회원상세
 router.get('/:uId/detail.do',async (req,res)=>{
   const user=await userService.detail(req.params.uId);
   if(user){
@@ -48,6 +59,7 @@ router.get('/:uId/detail.do',async (req,res)=>{
   }
 });
 
+//📁 회원수정
 router.get('/:uId/update.do',async (req,res)=>{
   const user=await userService.detail(req.params.uId);
   if(user){

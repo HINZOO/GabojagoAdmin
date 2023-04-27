@@ -1,0 +1,13 @@
+nav.mt-4.d-flex.justify-content-center
+    ul.pagination
+        li.page-item(class=(!pageVo.isPrev) && "disabled")
+            a.page-link(href=`?${pageVo.query}page=1`) <<
+        li.page-item(class=(!pageVo.isPrev) && "disabled")
+            a.page-link(href=`?${pageVo.query}page=${pageVo.prev}`) <
+        -for (let p = 1; p <= pageVo.totalPage; p++)
+            li.page-item(class=(p === pageVo.page) && "active")
+                a.page-link(href=`?${pageVo.query}page=${p}`)=p
+        li.page-item(class=(!pageVo.isNext) && "disabled")
+            a.page-link(href=`?${pageVo.query}page=${pageVo.next}`) >
+        li.page-item(class=(!pageVo.isNext) && "disabled")
+            a.page-link(href=`?${pageVo.query}page=${pageVo.totalPage}`) >>

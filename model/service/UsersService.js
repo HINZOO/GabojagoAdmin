@@ -1,18 +1,36 @@
 const sequelize=require("../SequelizePool");
 const usersEntity=require("../entity/UsersEntity")(sequelize);
 const {Op, where}=require("sequelize");
+const PageVo=require("../vo/PageVo");
 class UsersService{
-     async list(permission,page=1){
-        let limit=10;
+    async list(reqParams){
         const whereObj={};
-        if(permission!=null){
-            whereObj["permission"]=permission;
-
+        const orderArr=[];
+        if(reqParams.field && reqParams.value){
+            whereObj[reqParams.field]={[Op.like]:`%${reqParams.value}%`};
         }
-        return await usersEntity.findAll({
-            where: whereObj,
-            offset:(page-1)*limit,
-            limit :limit}); // limit offset,rowLength;
+        if(reqParams.orderField && reqParams.orderDirect){
+            orderArr.push(reqParams.orderField);
+            orderArr.push(reqParams.orderDirect);
+        }
+        const totalCnt=await usersEntity.count({
+            where: whereObj
+        })
+
+        const pageVo=new PageVo(reqParams.page,totalCnt,reqParams);
+        try {
+            const users= await usersEntity.findAll({
+                offset:pageVo.offset,
+                limit:pageVo.rowLength,
+                where:whereObj,
+                order:[orderArr]
+            })
+            users.pageVo=pageVo;
+
+            return users;
+        }catch (e) {
+            new Error(e);
+        }
     }
     async detail(uId){
         return await usersEntity.findByPk(uId);
@@ -34,8 +52,8 @@ class UsersService{
     async permissionModify(uId, permission) {
         try {
             let modify=await usersEntity.update(
-                    {permission: permission},
-                    {where: {u_id: uId}}
+                {permission: permission},
+                {where: {u_id: uId}}
             );
             return modify;
         } catch (e) {
