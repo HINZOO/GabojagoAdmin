@@ -1,0 +1,15 @@
+form.p-4.border(method="post", action="/qna/replys/update.do", enctype="multipart/form-data")
+    input(name="q_id", value=qna.q_id, hidden=true)
+    p.text-end.h4
+        div.row
+            div.form-floating.col
+                input(name="q_id", value=qna.q_id, hidden=true)
+                div.form-floating.col-1
+                    input.form-control(name="u_id", value=loginUser.u_id, readonly=true)
+                    label 댓글 작성자
+
+            div.form-floating
+                textarea.form-control(name="content")
+                label 내용
+        div.mt-2.text-end
+            button.btn.btn-outline-secondary(type="submit") 수정

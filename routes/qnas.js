@@ -16,6 +16,7 @@ router.get('/:qId/detail.do',async (req,res)=>{
     const qna=await qnaService.detail(req.params.qId);
     if(qna){
         res.render("qnas/detail",{qna:qna,params:req.query})
+        console.log(qna)
     }else{
         res.redirect("/qnas/list.do");
     }

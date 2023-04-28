@@ -18,8 +18,13 @@ block content
                                         th.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-2.me-4 작성일
                                         th.ms-4.text-muted #{qna.post_time}
 
-
                         th.ms-4.ms-4 #{qna.title}
 
+
+                    div
+                        include replys/list
+
+                    div
+                        include replys/insert
 
 

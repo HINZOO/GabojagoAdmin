@@ -4,6 +4,14 @@ const usersEntity=require("../entity/UsersEntity")(sequelize);
 const qnaReplysEntity=require("../entity/QnaReplyseEntity")(sequelize);
 const {Op} = require("sequelize");
 const PageVo=require("../vo/PageVo");
+qnasEntity.belongsTo(usersEntity,{
+    foreignKey : "u_id",
+    as: "user"
+});
+qnasEntity.hasMany(qnaReplysEntity,{
+    foreignKey :"q_id",
+    as:"replys",
+});
 
 class QnasService{
     async list(reqParams){
@@ -44,17 +52,8 @@ class QnasService{
 
     }
     async detail(qId){
-        return await qnasEntity.findByPk(qId);
         try {
-            qnasEntity.belongsTo(usersEntity,{
-                foreignKey : "u_id",
-                as: "user"
-            });
-            qnasEntity.hasMany(qnaReplysEntity,{
-                foreignKey :"q_id",
-                as:"replys",
-            });
-            const qna=await qnasEntity.findOne({
+            const qnas=await qnasEntity.findOne({
                 where : {
                     q_id:qId
                 },
@@ -63,15 +62,16 @@ class QnasService{
                         foreignKey : "q_id",
                         model:qnaReplysEntity,
                         as : "replys",
-                        required: false,
                         where : { parent_qna_id:null},
+                        required: false
                     }
                 ]
             });
-            return qna;
+            return qnas;
         }catch (e){
             new Error(e)
         }
+        return await qnasEntity.findByPk(qId);
     }
     async remove(qId){
         try {
@@ -80,9 +80,9 @@ class QnasService{
             throw new Error(e);
         }
     }
-    async register(qna) {
+    async register(qnas) {
         try {
-            return qnasEntity.create(qna);
+            return qnasEntity.create(qnas);
         }catch (e) {
             new Error(e);
         }

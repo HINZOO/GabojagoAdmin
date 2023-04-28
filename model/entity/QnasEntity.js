@@ -5,20 +5,25 @@ module.exports = (sequelize) =>{
     const qnasEntity = sequelize.define('qnasEntity',{
         q_id: {
             type:DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-            primaryKey: true
+            primaryKey:true,
+            autoIncrement:true
         },
         u_id: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
+            type:DataTypes.STRING(255),
+            allowNull:false,
+            references:{
+                model:"usersEntity",
+                key:"u_id",
+                onDelete:"CASCADE",
+                onUpdate:"CASCADE"
+            }
         },
         title: {
-            type:DataTypes.STRING(255),
-            allowNull: false,
+            type:DataTypes.STRING(255)
         },
         content: {
-            type: DataTypes.TEXT,
-            allowNull: true
+            type:DataTypes.TEXT,
+            allowNull:false
         },
         file_path: {
             type: DataTypes.STRING(255),

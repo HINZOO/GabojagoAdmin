@@ -13,10 +13,13 @@ const MemoryStore=require("memorystore")(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const qnasRouter=require('./routes/qnas');
+const qnaReplysRouter=require('./routes/replys');
 
 const userService = require("./model/service/UsersService");
-const qnasRouter=require('./routes/qnas');
 const qnaService = require("./model/service/QnasService");
+const qnaReplysService = require("./model/service/QnaReplysService");
+
 const app = express();
 
 // view engine setup
@@ -78,6 +81,9 @@ app.use(function (req, res, next){
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/qnas', qnasRouter);
+app.use('/qnas/reply',qnaReplysRouter);
+
+
 
 
 
