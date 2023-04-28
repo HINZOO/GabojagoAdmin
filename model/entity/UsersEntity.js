@@ -49,7 +49,7 @@ module.exports = (sequelize) => {
         permission: {
             type: DataTypes.ENUM('USER', 'PARTNER', 'ADMIN'),
             allowNull: false,
-            defaultValue:"USER"
+            defaultValue:'USER'
         },
         mbti: {
             type: DataTypes.ENUM('ISTJ', 'ISTP', 'ISFJ', 'ISFP', 'INTJ', 'INTP', 'INFJ', 'INFP', 'ESTJ', 'ESTP', 'ESFJ', 'ESFP', 'ENTJ', 'ENTP', 'ENFJ', 'ENFP'),

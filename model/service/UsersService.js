@@ -14,28 +14,18 @@ usersEntity.findAll({
             [
                 sequelize.literal(
                     `(
-                    SELECT SUM(mileage) FROM mileages AS m 
-                    WHERE m.u_id=u_id)`
-                ),
-                'sum_mile'
+                    SELECT SUM(mileage) FROM mileages AS m
+                    WHERE m.u_id=usersEntity.u_id
+                    )`
+                ),'sum_mile'
             ]
-        ]
+        ],
     }
 })
 
 class UsersService{
     async list(reqParams){
         const whereObj={};
-
-        if(permission!=null){
-            whereObj["permission"]=permission;
-        }
-
-        return await usersEntity.findAll({
-            where: whereObj,
-            offset:(page-1)*limit,
-            limit :limit}); // limit offset,rowLength;
-
         const orderArr=[];
         if(reqParams.field && reqParams.value){
             whereObj[reqParams.field]={[Op.like]:`%${reqParams.value}%`};
@@ -62,7 +52,6 @@ class UsersService{
         }catch (e) {
             new Error(e);
         }
-
     }
     async detail(uId) {
         return await usersEntity.findOne({
