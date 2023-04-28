@@ -13,6 +13,7 @@ router.get('/list.do', async (req,res)=>{
 router.get("/:cId/delete.do",async (req,res)=>{
     let del=0;
     try{
+
         del=await commsService.remove(req.params.cId);
     }catch (e){
         console.error(e);

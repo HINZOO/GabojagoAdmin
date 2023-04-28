@@ -1,9 +1,9 @@
 const sequelize=require("../SequelizePool");
-const commsEntity=require("../entity/CommEntity")(sequelize);
+const commEntity=require("../entity/CommEntity")(sequelize);
 const PageVo=require("../vo/PageVo");
 const {Op} = require("sequelize");
 
-class CommsService{
+class CommService{
     async list(reqParams){
         try{
             const whereObj={};
@@ -15,12 +15,12 @@ class CommsService{
                 orderArr.push(reqParams.orderField);
                 orderArr.push(reqParams.orderDirect);
             }
-            const totalCnt=await commsEntity.count({
+            const totalCnt=await commEntity.count({
                 where: whereObj
             })
             console.log(JSON.stringify(whereObj));
             const pageVo=new PageVo(reqParams.page,totalCnt,reqParams);
-            const comms=await commsEntity.findAll({
+            const comms=await commEntity.findAll({
                 offset:pageVo.offset,
                 limit:pageVo.rowLength,
                 where:whereObj,
@@ -36,7 +36,7 @@ class CommsService{
     //상세
     async detail(cId){
         try{
-            const comm=await commsEntity.findOne({
+            const comm=await commEntity.findOne({
                 where:{c_id:cId}
             })
             return comm;
@@ -48,7 +48,7 @@ class CommsService{
 
     async modify(comm){
         try{
-            let modify=await commsEntity.update(comm,{where:{c_id:comms.c_id}})
+            let modify=await commEntity.update(comm,{where:{c_id:comms.c_id}})
             return modify
         }catch (e) {
             new Error(e);
@@ -57,7 +57,7 @@ class CommsService{
 
     async remove(cId){
         try{
-            let del=await commsEntity.destroy({where:{c_id:cId}})
+            let del=await commEntity.destroy({where:{c_id:cId}})
             return del;
         }catch (e) {
             new Error(e);
@@ -65,10 +65,10 @@ class CommsService{
     }
     async register(comm){
         try{
-            return commsEntity.create(comm)
+            return commEntity.create(comm)
         }catch (e) {
             new Error(e);
         }
     }
 }
-module.exports=new CommsService();
+module.exports=new CommService();

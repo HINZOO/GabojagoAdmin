@@ -1,8 +1,28 @@
 const sequelize=require("../SequelizePool");
 const usersEntity=require("../entity/UsersEntity")(sequelize);
 const followsEntity=require("../entity/FollowEntity")(sequelize);
+const mileageEntity=require("../entity/MileageEntity")(sequelize)
 const {Op, where}=require("sequelize");
 const PageVo=require("../vo/PageVo");
+usersEntity.hasMany(mileageEntity,{
+    foreignKey:"u_id",
+    as:"mileage"
+})
+usersEntity.findAll({
+    attributes:{
+        include:[
+            [
+                sequelize.literal(
+                    `(
+                    SELECT SUM(mileage) FROM mileages AS m 
+                    WHERE m.u_id=u_id)`
+                ),
+                'sum_mile'
+            ]
+        ]
+    }
+})
+
 class UsersService{
     async list(reqParams){
         const whereObj={};

@@ -1,6 +1,6 @@
 const {Sequelize,DataTypes}=require("sequelize");
 module.exports=(sequelize)=>{
-    const commsEntity=sequelize.define("commsEntity",{
+    const commEntity=sequelize.define("commEntity",{
         c_id:{
             type:DataTypes.INTEGER.UNSIGNED,
             primaryKey:true,
@@ -17,10 +17,10 @@ module.exports=(sequelize)=>{
             }
         },
         p_id:{
-            type:DataTypes.STRING(255),
+            type:DataTypes.INTEGER.UNSIGNED,
             allowNull:false,
             references:{
-                model:"plansEntity",
+                model:"planEntity",
                 key:"p_id",
                 onDelete:"CASCADE",
                 onUpdate:"CASCADE"
@@ -120,7 +120,7 @@ module.exports=(sequelize)=>{
 
     }, {
         timestamps: false,
-        tableName: 'trips' // 테이블 이름
+        tableName: 'communitys' // 테이블 이름
     });
-    return commsEntity;
+    return commEntity;
 };

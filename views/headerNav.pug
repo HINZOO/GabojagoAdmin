@@ -43,3 +43,21 @@ nav.navbar.navbar-expand-lg.bg-danger-subtle
                 else
                     a.text-secondary.me-2(href=`/users/${loginUser.u_id}/detail.do`)=`(${loginUser.u_id}) ${loginUser.name}`
                     a.text-secondary(href="/users/logout.do") 로그아웃
+
+                    //수정 등록 삭제 action 시 상태를 세션의 actionMsg 로 보내면 띄우는 모달
+    -if(actionMsg)
+        #actionMsgModal.modal.show
+            .modal-dialog.modal-dialog-centered
+                .modal-content
+                    .modal-header
+                        h1.modal-title.fs-5#exampleModalToggleLabel Action 상태 메세지
+                        button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                    .modal-body=actionMsg
+                        |
+                    .modal-footer
+                        button.btn.btn-primary(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
+
+        script.
+            var myModal = new bootstrap.Modal(document.getElementById('actionMsgModal'), {});
+            myModal.show()
+

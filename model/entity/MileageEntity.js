@@ -1,0 +1,34 @@
+const{Sequelize,DataTypes}=require("sequelize")
+module.exports=(sequelize)=>{
+    const mileageEntity=sequelize.define("mileageEntity",{
+        m_id:{
+            type:DataTypes.INTEGER.UNSIGNED,
+            primaryKey:true,
+            autoIncrement:true
+        },
+        u_id:{
+            type:DataTypes.STRING(255),
+            allowNull:false,
+            reference:{
+                model:"usersEntity",
+                key:"u_id",
+                onDelete:"CASCADE",
+                onUpdate:"CASCADE"
+            }
+        },
+        mileages:{
+            type:DataTypes.INTEGER
+        },
+        content:{
+            type:DataTypes.STRING(255)
+        },
+        post_time:{
+            type:DataTypes.DATE,
+            defaultValue:Sequelize.literal("CURRENT_TIMESTAMP")
+        }
+    },{
+        timestamps:false,
+        tableName:'mileages'
+    })
+    return mileageEntity;
+}
