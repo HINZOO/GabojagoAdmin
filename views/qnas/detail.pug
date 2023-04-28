@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+    div.my-5
+                .col.ps-0
+                    .card.col(style="height: 75vh; overflow-y: auto")
+                        .card-header.d-flex.justify-content-between.align-items-center.bg-light.position-sticky.top-0(style="z-index: 999")
+
+                            div.card-title.col-8
+                                table.table
+                                    tr
+                                        th(scope="col").bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-2.me-4 아이디
+                                        th(scope="col").ms-4 #{qna.u_id}
+                                    tr
+                                        th.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-2.me-4 제목
+                                        th.ms-4 #{qna.title}
+                                    tr
+                                        th.bg-primary.bg-opacity-50.text-white.rounded-4.p-1.mb-2.me-4 작성일
+                                        th.ms-4.text-muted #{qna.post_time}
+
+                        th.ms-4.ms-4 #{qna.title}
+
+
+                    div
+                        include replys/list
+
+                    div
+                        include replys/insert
+
+
