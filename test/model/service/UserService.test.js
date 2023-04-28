@@ -1,4 +1,5 @@
 let usersService = require("../../../model/service/UsersService");
+const {de} = require("faker/lib/locales");
 describe("UserService Test",()=>{
     test("list Test",async ()=>{
         let list = await usersService.list("USER",1);
@@ -7,7 +8,8 @@ describe("UserService Test",()=>{
     });
     test("detail Test",async ()=>{
         let detail = await usersService.detail("USER02");
-        console.log(detail);
+        console.log( await detail.getFollows());
+        console.log( await detail.getFollowings());
         expect(detail).not.toBeNull();
     });
     test("login Test",async ()=>{

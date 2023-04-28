@@ -13,12 +13,17 @@ const MemoryStore=require("memorystore")(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+<<<<<<< HEAD
 const qnasRouter=require('./routes/qnas');
 const qnaReplysRouter=require('./routes/replys');
 
 const userService = require("./model/service/UsersService");
 const qnaService = require("./model/service/QnasService");
 const qnaReplysService = require("./model/service/QnaReplysService");
+=======
+const tripsRouter = require('./routes/trips');
+const commsRouter = require('./routes/comms');
+>>>>>>> add9f1274dfafe9783bd96a3f2724a3f3122d4f4
 
 const app = express();
 
@@ -80,12 +85,17 @@ app.use(function (req, res, next){
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+<<<<<<< HEAD
 app.use('/qnas', qnasRouter);
 app.use('/qnas/reply',qnaReplysRouter);
 
 
 
 
+=======
+app.use('/trips', tripsRouter);
+app.use('/comms', commsRouter);
+>>>>>>> add9f1274dfafe9783bd96a3f2724a3f3122d4f4
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
