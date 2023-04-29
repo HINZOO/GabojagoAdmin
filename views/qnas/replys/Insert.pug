@@ -1,8 +1,8 @@
-form.p-4.border(name="inert", method="post", action="/qna/replys/insert.do", enctype="multipart/form-data")
+form.p-4.border(name="insert", method="post", action="/qnas/replys/insert.do",)
     p.text-end.h4
     div.row
         div.form-floating.col
-            input(name="q_id", value=qna.q_id, hidden=true)
+            input(name="q_id", value=qna.q_id)
             div.form-floating.col-1
                 input.form-control(name="u_id", value=loginUser.u_id, readonly=true)
                 label 댓글 작성자

@@ -19,19 +19,16 @@ router.get('/list.do', async (req,res)=>{
 });
 router.post("/insert.do",async (req,res)=>{
     const replys=req.body;
-    let inert=0;
-    try{
+    console.log("넘어온값"+replys.q_id)
+    console.log("넘어온값"+replys.u_id)
+    console.log("넘어온값"+replys.content)
+    let insert=0;
+    try {
         insert=await qnaReplysService.register(replys)
-    }catch (e){
-        console.error(e);
-    }
-    if(insert>0){
-        try {
-            insert=await qnaReplysService.register(replys)
-        }catch (e) {
+    }catch (e) {
             console.error(e);
-        }
     }
+
     res.redirect(`/qnas/${replys.q_id}/detail.do`);
 });
 router.post("/update.do",async (req,res)=>{

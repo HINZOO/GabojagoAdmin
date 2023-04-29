@@ -22,12 +22,7 @@ class QnaReplysService{
             })
 
             const pageVo=new PageVo(reqParams.page,totalCnt,reqParams);
-            const Replys= await qnaReplysEntity.findAll({
-                offset:pageVo.offset,
-                limit:pageVo.rowLength,
-                where:whereObj,
-                order:[orderArr]
-            })
+
             try {
                 const Replys= await qnaReplysEntity.findAll({
                     offset:pageVo.offset,

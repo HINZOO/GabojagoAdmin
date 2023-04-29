@@ -22,7 +22,7 @@ module.exports = (sequelize) =>{
             type:DataTypes.INTEGER.UNSIGNED,
             allowNull:false,
             references:{
-                model:"usersEntity",
+                model:"UsersEntity",
                 key:"u_id",
                 onDelete:"CASCADE",
                 onUpdate:"CASCADE"
@@ -36,13 +36,8 @@ module.exports = (sequelize) =>{
             type:DataTypes.DATE,
             defaultValue:Sequelize.literal("CURRENT_TIMESTAMP")
         },
-        update_time: {
-            type:DataTypes.DATE,
-            defaultValue:Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-        },
         parent_qna_id: {
             type:DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
         },
 
     }, {

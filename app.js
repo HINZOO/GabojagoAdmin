@@ -86,7 +86,7 @@ app.use(function (req, res, next){
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/qnas', qnasRouter);
-app.use('/qnas/reply',qnaReplysRouter);
+app.use('/qnas/replys',qnaReplysRouter);
 app.use('/trips', tripsRouter);
 app.use('/comms', commsRouter);
 
