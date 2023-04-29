@@ -1,6 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize');
-
-
 module.exports = (sequelize) =>{
     const qnaReplysEntity = sequelize.define('qnaReplysEntity',{
         qr_id: {
@@ -36,13 +34,9 @@ module.exports = (sequelize) =>{
             type:DataTypes.DATE,
             defaultValue:Sequelize.literal("CURRENT_TIMESTAMP")
         },
-        update_time: {
-            type:DataTypes.DATE,
-            defaultValue:Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-        },
         parent_qna_id: {
             type:DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
+
         },
 
     }, {
@@ -51,5 +45,4 @@ module.exports = (sequelize) =>{
     });
     return qnaReplysEntity;
 };
-
 
