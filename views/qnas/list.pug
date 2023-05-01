@@ -17,12 +17,12 @@ block content
                     th(scope="row") #{qna.u_id}
                     th(scope="row") #{qna.title}
                     th(scope="row") #{qna.post_time ? qna.post_time.toLocaleDateString("ko") : ''}
-                    th(scope="row") #{qna.status}
+                    th(scope="row")
 
-                        if(qna.status===1)
-                            a.btn.btn-sm.btn-dark.me-1 미답변
-                        else
-                            a.btn.btn-sm.btn-danger.me-1 답변
+                                -if(qna.status==1)
+                                    a.btn.btn-sm.btn-outline-dark.me-1 답변
+                                -if(qna.status!=1)
+                                    a.btn.btn-sm.btn-outline-dark.me-1 미답변
 
                                 a.btn.btn-sm.btn-outline-dark.me-1(href=`/qnas/${qna.q_id}/detail.do`) 상세
                                 a.btn.btn-sm.btn-outline-danger(href=`/qnas/${qna.q_id}/delete.do`) 삭제

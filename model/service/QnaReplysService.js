@@ -34,13 +34,6 @@ class QnaReplysService{
             new Error(e);
         }
     }
-    async modify(replys){
-        try {
-            const modify=await qnaReplysEntity.update(replys);
-        }catch (e) {
-            new Error(e);
-        }
-    }
     async register(replys) {
         try {
             return qnaReplysEntity.create(replys);

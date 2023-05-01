@@ -15,12 +15,13 @@ router.get('/list.do', async (req,res)=>{
 
 router.post("/insert.do",async (req,res)=>{
     const replys=req.body;
-    console.log("넘어온값"+replys.q_id)
-    console.log("넘어온값"+replys.u_id)
-    console.log("넘어온값"+replys.content)
-    let insert=0;
+
+    let insert=0
     try {
-        insert=await qnaReplysService.register(replys)
+        const qnas={status:1,q_id:replys.q_id};
+        insert+=await qnaService.modify(qnas)
+        insert+=await qnaReplysService.register(replys)
+        //원래 글 의 상태를 변경
     }catch (e) {
         console.error(e);
     }
@@ -54,6 +55,8 @@ router.post("/insert.do",async (req,res)=>{
             }catch (e){
                 console.error(e);
             }
+        console.log(del)
+
         res.redirect(`/qnas/${qId}/detail.do`);
     });
     module.exports=router;

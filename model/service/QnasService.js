@@ -87,6 +87,16 @@ class QnasService{
             new Error(e);
         }
     }
+    async modify(qnas) {
+        try {
+            return qnasEntity.update(qnas,
+                {
+                    where: {q_id: qnas.q_id}
+                });
+        }catch (e) {
+            new Error(e);
+        }
+    }
 
 }
 module.exports=new QnasService();
