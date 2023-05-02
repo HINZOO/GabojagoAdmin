@@ -18,7 +18,7 @@ router.post("/insert.do",async (req,res)=>{
 
     let insert=0
     try {
-        const qnas={status:1,q_id:replys.q_id};
+        let qnas={status:1,q_id:replys.q_id};
         insert+=await qnaService.modify(qnas)
         insert+=await qnaReplysService.register(replys)
         //원래 글 의 상태를 변경
@@ -46,15 +46,15 @@ router.post("/insert.do",async (req,res)=>{
         }
     });
     router.get("/:qrId/:qId/delete.do",async (req,res)=>{
+        const replys=req.body;
         let qrId=req.params.qrId;
         let qId=req.params.qId;
         let del=0;
-        if(del>0)
-            try {
-                del=await qnaReplysService.remove(qrId);
-            }catch (e){
-                console.error(e);
-            }
+        try {
+            del=await qnaReplysService.remove(replys);
+        }catch (e){
+            console.error(e);
+        }
         console.log(del)
 
         res.redirect(`/qnas/${qId}/detail.do`);

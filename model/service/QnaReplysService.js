@@ -1,5 +1,6 @@
 const sequelize=require("../SequelizePool");
 const qnaReplysEntity=require("../entity/QnaReplyseEntity")(sequelize);
+const qnaEntity=require("../entity/QnasEntity")(sequelize);
 const usersEntity=require("../entity/UsersEntity")(sequelize);
 const {Op} = require("sequelize");
 const PageVo=require("../vo/PageVo");
@@ -48,5 +49,6 @@ class QnaReplysService{
             throw new Error(e);
         }
     }
+
 }
 module.exports=new QnaReplysService();
