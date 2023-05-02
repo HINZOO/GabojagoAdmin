@@ -1,13 +1,11 @@
-form.p-4.border(name="insert", method="post", action="/qnas/replys/insert.do",)
+form.p-4.border(name="insert", method="post", action="/qnas/replys/insert.do")
     p.text-end.h4
     div.row
         div.form-floating.col
-            input(name="q_id", value=qna.q_id)
+            input(name="q_id", value=qna.q_id, hidden=true)
             div.form-floating.col-1
                 input.form-control(name="u_id", value=loginUser.u_id, readonly=true)
                 label 댓글 작성자
-
-
         div.form-floating
             textarea.form-control(name="content")
             label 내용

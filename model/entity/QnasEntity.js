@@ -29,6 +29,10 @@ module.exports = (sequelize) =>{
             type: DataTypes.STRING(255),
             allowNull: true
         },
+        status: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true
+        },
         post_time: {
             type:DataTypes.DATE,
             defaultValue:Sequelize.literal("CURRENT_TIMESTAMP")

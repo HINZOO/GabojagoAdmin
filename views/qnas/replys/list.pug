@@ -1,4 +1,3 @@
-
 ul.ps-0(style="list-style:none")
     -if(qna.replys)
         -for(const r of qna.replys)
@@ -11,13 +10,14 @@ ul.ps-0(style="list-style:none")
                                 small.px-3=`글쓴이 : ${r.u_id}`
                             p.card-text.d-flex
                                 small.pe-3.text-muted=`작성일 : ${r.post_time.toLocaleString("ko-KR")}`
-                                //small.text-muted=`수정일 : ${r.update_time.toLocaleString("ko-KR")}`
                                 p.card-text=r.content
                         ul.nav.nav-tabs
                                 li.nav-item
                                     a.nav-link(href=`#replyModify${r.qr_id}`, role="button", data-bs-toggle="collapse") 수정
                                 li.nav-item
-                                    a(href=`/replys/${r.qr_id}/${r.b_id}/delete.do`).nav-link 삭제
+                                    a(href=`/qnas/${r.qr_id}/${r.q_id}/delete.do`).nav-link 삭제
+
+
                         div.collapse(id=`replyModify${r.qr_id}`)
                             include update
                         div.collapse(id=`replyReply${r.qr_id}`)

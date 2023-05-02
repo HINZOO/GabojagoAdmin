@@ -13,6 +13,7 @@ const MemoryStore=require("memorystore")(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+<<<<<<< HEAD
 const qnasRouter=require('./routes/qnas');
 const qnaReplysRouter=require('./routes/replys');
 const tripsRouter = require('./routes/trips');
@@ -24,6 +25,19 @@ const commsRouter = require('./routes/comms');
 // const qnaReplysService = require("./model/service/QnaReplysService");
 
 
+=======
+
+const qnasRouter=require('./routes/qnas');
+const qnaReplysRouter=require('./routes/replys');
+
+const userService = require("./model/service/UsersService");
+const qnaService = require("./model/service/QnasService");
+const qnaReplysService = require("./model/service/QnaReplysService");
+
+const tripsRouter = require('./routes/trips');
+const commsRouter = require('./routes/comms');
+
+>>>>>>> my
 
 const app = express();
 
@@ -85,8 +99,19 @@ app.use(function (req, res, next){
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+<<<<<<< HEAD
 app.use('/qnas', qnasRouter);
 app.use('/qnas/replys',qnaReplysRouter);
+=======
+
+app.use('/qnas', qnasRouter);
+app.use('/qnas/replys',qnaReplysRouter);
+
+
+
+
+
+>>>>>>> my
 app.use('/trips', tripsRouter);
 app.use('/comms', commsRouter);
 

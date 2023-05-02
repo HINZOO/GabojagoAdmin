@@ -1,6 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize');
-
-
 module.exports = (sequelize) =>{
     const qnaReplysEntity = sequelize.define('qnaReplysEntity',{
         qr_id: {
@@ -22,7 +20,7 @@ module.exports = (sequelize) =>{
             type:DataTypes.INTEGER.UNSIGNED,
             allowNull:false,
             references:{
-                model:"UsersEntity",
+                model:"usersEntity",
                 key:"u_id",
                 onDelete:"CASCADE",
                 onUpdate:"CASCADE"
@@ -32,6 +30,10 @@ module.exports = (sequelize) =>{
             type: DataTypes.TEXT,
             allowNull: true
         },
+        status: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true
+        },
         post_time: {
             type:DataTypes.DATE,
             defaultValue:Sequelize.literal("CURRENT_TIMESTAMP")
@@ -39,12 +41,9 @@ module.exports = (sequelize) =>{
         parent_qna_id: {
             type:DataTypes.INTEGER.UNSIGNED,
         },
-
     }, {
         timestamps: false,
         tableName: 'qna_replys' // 테이블 이름
     });
     return qnaReplysEntity;
 };
-
-
