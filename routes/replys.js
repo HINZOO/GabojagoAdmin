@@ -46,12 +46,11 @@ router.post("/insert.do",async (req,res)=>{
         }
     });
     router.get("/:qrId/:qId/delete.do",async (req,res)=>{
-        const replys=req.body;
         let qrId=req.params.qrId;
         let qId=req.params.qId;
         let del=0;
         try {
-            del=await qnaReplysService.remove(replys);
+            del=await qnaReplysService.remove(qrId);
         }catch (e){
             console.error(e);
         }
