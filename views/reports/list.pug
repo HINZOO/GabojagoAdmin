@@ -1,0 +1,10 @@
+extends ../layout
+block content
+    h2.m-4 신고 게시판
+
+    each report in reports
+        div #{report.c_id}
+        div #{report.cr_id}
+        div #{report.u_id}
+        div #{report.content}
+        div #{report.post_time}
