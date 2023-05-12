@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(cookiePw));
 app.use(cookieEncrypt(cookiePw));
 
-app.use(express.static(path.join(__dirname, 'public')));//정적리소스위치
+app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스위치
 
 app.use(session({
   secret:'my-secret-key',

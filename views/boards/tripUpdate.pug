@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+    div.my-5
+        div.m-auto(style="width: 600px;")
+            h3.my-4
+                span 여행지 상세정보
+            div
+                div.card
+                    div.card-body
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 카테고리
+                            select.form-control.form-select(name='category', value=trip.category)
+                                option(value='힐링', selected=(trip.category === '힐링')) 힐링
+                                option(value='체험', selected=(trip.category === '체험')) 체험
+                                option(value='반려동물', selected=(trip.category === '반려동물')) 반려동물
+                                option(value='레저', selected=(trip.category === '레저')) 레저
+                                option(value='박물관', selected=(trip.category === '박물관')) 박물관

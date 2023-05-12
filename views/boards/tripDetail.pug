@@ -1,0 +1,82 @@
+extends ../layout
+
+block content
+    div.my-5
+        div.m-auto(style="width: 600px;")
+            h3.my-4
+                span 여행지 상세정보
+            div
+                div.card
+                    div.card-body
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 카테고리
+                            span.col.ms-3 #{trip.category}
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 지역
+                            span.col.ms-3 #{trip.area}
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 제목
+                            span.col.ms-3 #{trip.title}
+                        hr
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 주소
+                            span.col.ms-3 #{trip.address}
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 연락처
+                            span.col.ms-3 #{trip.phone}
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 홈페이지
+                            span.col.ms-3 #{trip.url_address}
+                        hr
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 소개글
+                            div
+                                textarea(readonly).form-control(rows=4) #{trip.content}
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 해시태그
+                        p.form-control
+                            -for (t of trip.tags)
+                                span.btn.disabled.text-dark.btn-outline-secondary.btn-sm.rounded-5.m-1 #{t.tag}
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 메인 이미지
+                        p.form-control
+                            -for (img of trip.imgs)
+                                -if(img.img_main===true)
+                                    label.w-25
+                                        img.img-thumbnail(src=`${img.img_path.slice(7)}`)
+                                        // 이미지 경로 /public 첫 7글자 slice 로 제외시키기 (미들웨어로 정적리소스 경로에 public 을 설정해서, public 을 포함안해야함)
+                        p.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 이미지
+                        p.form-control
+                            -for (img of trip.imgs)
+                                -if(img.img_main===false)
+                                    label.w-25
+                                        img.img-thumbnail(src=`${img.img_path.slice(7)}`)
+                        div.row.d-flex.align-items-center
+                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 mbti
+                            ul.col.ms-3.list-unstyled.d-flex.m-0
+                                li.me-2(class= trip.istj ? "" : "d-none") #ISTJ
+                                li.me-2(class= trip.istp ? "" : "d-none") #ISTP
+                                li.me-2(class= trip.isfj ? "" : "d-none") #ISFJ
+                                li.me-2(class= trip.isfp ? "" : "d-none") #ISFP
+                                li.me-2(class= trip.intj ? "" : "d-none") #INTJ
+                                li.me-2(class= trip.intp ? "" : "d-none") #INTP
+                                li.me-2(class= trip.infj ? "" : "d-none") #INFJ
+                                li.me-2(class= trip.infp ? "" : "d-none") #INFP
+                                li.me-2(class= trip.estj ? "" : "d-none") #ESTJ
+                                li.me-2(class= trip.estp ? "" : "d-none") #ESTP
+                                li.me-2(class= trip.esfj ? "" : "d-none") #ESFJ
+                                li.me-2(class= trip.esfp ? "" : "d-none") #ESFP
+                                li.me-2(class= trip.entj ? "" : "d-none") #ENTJ
+                                li.me-2(class= trip.entp ? "" : "d-none") #ENTP
+                                li.me-2(class= trip.enfj ? "" : "d-none") #ENFJ
+                                li.me-2(class= trip.enfp ? "" : "d-none") #ENFP
+                p.text-end.my-3
+                    a.btn.btn-outline-dark(href=`/trips/list.do`) 취소
+                    a.btn.btn-outline-danger.ms-2(href=`/trips/${trip.t_id}/update.do`) 수정
+
+
+
+
+
+

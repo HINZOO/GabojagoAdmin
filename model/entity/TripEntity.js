@@ -46,77 +46,69 @@ module.exports=(sequelize)=>{
         },
         istj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         istp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         isfj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         isfp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         intj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         intp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         infj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         infp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         estj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         estp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
-        },
-        estj:{
-            type:DataTypes.BOOLEAN,
-            defaultValue:false,
-        },
-        estp:{
-            type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         esfj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         esfp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         entj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         entp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         enfj:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
         enfp:{
             type:DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue:false
         },
-        area:{
+        category:{
             type:DataTypes.ENUM('힐링','체험','반려동물','레저','박물관'),
             allowNull:false
         }

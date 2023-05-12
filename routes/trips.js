@@ -10,6 +10,31 @@ router.get('/list.do', async (req,res)=>{
     res.render("boards/tripList",{trips:trips,params:req.query});
 });
 
+// 상세
+router.get('/:tId/detail.do',async(req,res)=>{
+   const trip=await tripsService.detail(req.params.tId);
+    console.log("trip 안나와?",trip)
+
+   if(trip){
+       res.render("boards/tripDetail",{trip:trip,params:req.query})
+   }else {
+       res.redirect("/trips/list.do");
+   }
+
+});
+
+
+// 수정
+router.get('/:tId/update.do', async(req,res)=>{
+    const trip=await tripsService.detail(req.params.tId);
+    if(trip) {
+        res.render("boards/tripUpdate",{trip:trip})
+    }else{
+        res.redirect(`/trips/${req.params.tId}/detail.do`);
+    }
+})
+
+
 router.get("/:tId/delete.do",async (req,res)=>{
     let del=0;
     try{
