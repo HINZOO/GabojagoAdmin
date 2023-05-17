@@ -50,6 +50,34 @@ class TripsService {
         }
     }
 
+    // 삭제할 이미지 리스트
+    async imgList(delImgId) {
+        let imgList=null;
+        let img=null;
+        if(delImgId!=null){
+            imgList=[];
+            if(Array.isArray(delImgId) && delImgId.length > 0) {
+                // id 가 배열임을 체크해야하는 이유! 안하면, id 2글자이상인 경우 한자리로 나뉜다.
+                // ex) '77' -> id : '7'
+                for (const id of delImgId) {
+                    // let img=await tripImgsEntity.findByPk(id);
+                    img = await tripImgsEntity.findOne({where: {ti_id: id}});
+                    imgList.push(img);
+                    // const img = await tripImgsEntity.findOne({where: {ti_id: id}});
+                    // console.log("trip 서비스 _ 삭제할 img 상세", img);
+                    console.log("서비스 _ delImgId 여러개 img", img);
+                    console.log("서비스 _ delImgId 여러개 imgList", imgList);
+                }
+            } else {
+                img = await tripImgsEntity.findOne({where: {ti_id: delImgId}});
+                imgList.push(img);
+                console.log("서비스 _ delImgId 1개 img", img);
+                console.log("서비스 _ delImgId 1개 imgList", imgList);
+            }
+        }
+        return imgList;
+    }
+
     //상세
     async detail(tId) {
         try {
@@ -81,18 +109,52 @@ class TripsService {
 
     }
 
-    async modify(trip) {
+    async modify(trip,imgs) { // imgs : 라우터 req.files (업로드한 이미지 파일)
         try {
-            let modify = await tripsEntity.update(trip, {where: {t_id: trips.t_id}})
-            return modify
+            let modify = await tripsEntity.update(
+                trip,
+                {where: {t_id: trip.t_id}}
+            )
+            const imgPaths=[];
+            for(const img of imgs) {
+                console.log("img.filename",img.filename);
+                console.log("img.path",img.path);
+                modify+=await tripImgsEntity.create({ // db 에 이미지 추가
+                    t_id: trip.t_id,
+                    img_path: "/" + img.path, // img.path : public/img/trip/trip_1684137090730_55.jpeg
+                    img_main: false
+                })
+                imgPaths.push("/"+img.path);
+                trip.img_path=imgPaths;
+            }
+
+            // delImgId == ti_id 삭제
+            if(trip.delImgId!=null) {
+                if(Array.isArray(trip.delImgId) && trip.delImgId.length > 0){
+                    for (const id of trip.delImgId) { // id 가 한개인경우 '53' => '5','3'
+                        modify += await tripImgsEntity.destroy({where: {ti_id: id}}); // db 이미지 삭제
+                    }
+                } else {
+                    modify+=await tripImgsEntity.destroy({where:{ti_id: trip.delImgId}});
+                }
+            }
+            console.log("modify", modify);
+            console.log("imgs",imgs);
+            console.log("trip", trip);
+            console.log("trip.t_id", trip.t_id);
+            return modify;
         } catch (e) {
             new Error(e);
+            console.log(e);
         }
     }
+
 
     async remove(tId) {
         try {
             let del = await tripsEntity.destroy({where: {t_id: tId}})
+
+            console.log("trip",trip);
             return del;
         } catch (e) {
             new Error(e);

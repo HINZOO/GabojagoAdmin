@@ -31,7 +31,7 @@ block content
                         p.row.d-flex.align-items-center
                             span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 소개글
                             div
-                                textarea(readonly).form-control(rows=4) #{trip.content}
+                                textarea(class="form-control" readonly rows="4") #{trip.content}
                         p.row.d-flex.align-items-center
                             span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 해시태그
                         p.form-control
@@ -72,7 +72,7 @@ block content
                                 li.me-2(class= trip.enfj ? "" : "d-none") #ENFJ
                                 li.me-2(class= trip.enfp ? "" : "d-none") #ENFP
                 p.text-end.my-3
-                    a.btn.btn-outline-dark(href=`/trips/list.do`) 취소
+                    a.btn.btn-outline-dark(href="/trips/list.do") 취소
                     a.btn.btn-outline-danger.ms-2(href=`/trips/${trip.t_id}/update.do`) 수정
 
 

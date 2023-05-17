@@ -7,3 +7,10 @@
 body{
     font-family: 'Noto Sans KR', sans-serif;
 }
+
+.delImgInput {
+    display: none;
+}
+.delImgInput:checked + img {
+    background-color: lightcoral;
+}

@@ -1,18 +1,68 @@
 extends ../layout
 
 block content
-    div.my-5
-        div.m-auto(style="width: 600px;")
-            h3.my-4
-                span 여행지 상세정보
-            div
-                div.card
-                    div.card-body
-                        p.row.d-flex.align-items-center
-                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 카테고리
-                            select.form-control.form-select(name='category', value=trip.category)
-                                option(value='힐링', selected=(trip.category === '힐링')) 힐링
-                                option(value='체험', selected=(trip.category === '체험')) 체험
-                                option(value='반려동물', selected=(trip.category === '반려동물')) 반려동물
-                                option(value='레저', selected=(trip.category === '레저')) 레저
-                                option(value='박물관', selected=(trip.category === '박물관')) 박물관
+    form.border.m-auto(method="post", action="/trips/update.do", enctype="multipart/form-data", style="width: 600px")
+        input(name="t_id", value=trip.t_id)
+        h3.my-4 여행지 정보수정
+        p.form-floating
+            select.form-control.form-select(name='category', value=trip.category)
+                option(value='힐링', selected=(trip.category === '힐링')) 힐링
+                option(value='체험', selected=(trip.category === '체험')) 체험
+                option(value='반려동물', selected=(trip.category === '반려동물')) 반려동물
+                option(value='레저', selected=(trip.category === '레저')) 레저
+                option(value='박물관', selected=(trip.category === '박물관')) 박물관
+            label 카테고리
+        p
+            label 메인이미지 변경
+            div.form-control
+                -for(img of trip.imgs)
+                    -if(img.img_main===true)
+                        label.w-25
+                            input(name="delMainImgId", value=img.ti_id)
+                            img.img-thumbnail(src=`${img.img_path.slice(7)}`)
+            input.form-control(type="file", name="img" value=1)
+
+        p
+            label 이미지 삭제
+            div.form-control
+                -for(img of trip.imgs)
+                    -if(img.img_main===false)
+                        label.w-25
+                            input(type="hidden" name="origin_img_path" value=img.img_path)
+                            input.delImgInput(type="checkbox", name="delImgId", value=img.ti_id)
+                            img.img-thumbnail(src=`${img.img_path.slice(7)}`)
+        p(id="imgCont")
+            button.btn.btn-danger.w-100.d-flex.justify-content-center.align-items-center(id="imgAddBtn", type="button")
+                span 이미지
+                span.border.ms-1.rounded-1.text-white.d-flex.justify-content-center.align-items-center(style="width:20px; height:20px") +
+
+        p.text-end
+            a.btn.btn-outline-dark(href="/trips/list.do") 취소
+            button.btn.btn-outline-danger.ms-2(type="submit") 등록
+
+
+
+
+    script.
+        const imgAddBtn = document.getElementById("imgAddBtn");
+        const imgCont = document.getElementById("imgCont");
+        let imgAddBtnCount = 0;
+        imgAddBtn.addEventListener("click", (e) => {
+            if (imgAddBtnCount < 5) {
+                imgCont.insertAdjacentHTML("beforeend", imgInputComponent());
+                imgAddBtnCount++;
+            }
+        });
+
+        function imgInputComponent(label = "이미지", name = "img") {
+            return `
+                         <p class="input-group mt-2">
+                            <label class="input-group-text">${label}</label>
+                            <input class="form-control" type="file" name="${name}">
+                            <button type="button" class="btn btn-danger d-flex align-items-center" onclick="this.closest('.input-group').remove()">
+                                <span class="bi bi-x-lg">x</b>
+                            </button>
+                        </p>
+                    `
+
+        }

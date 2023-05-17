@@ -10,7 +10,6 @@ const session=require('express-session');
 const MemoryStore=require("memorystore")(session);
 
 
-
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const qnasRouter=require('./routes/qnas');
