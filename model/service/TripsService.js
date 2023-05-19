@@ -115,18 +115,73 @@ class TripsService {
                 trip,
                 {where: {t_id: trip.t_id}}
             )
-            const imgPaths=[];
-            for(const img of imgs) {
-                console.log("img.filename",img.filename);
-                console.log("img.path",img.path);
-                modify+=await tripImgsEntity.create({ // db 에 이미지 추가
-                    t_id: trip.t_id,
-                    img_path: "/" + img.path, // img.path : public/img/trip/trip_1684137090730_55.jpeg
-                    img_main: false
-                })
-                imgPaths.push("/"+img.path);
-                trip.img_path=imgPaths;
+            // 👀imgs 가 없는 경우 null 처리하기!
+            if(!imgs) imgs=null;
+            const mainImg = imgs.mainImg;
+            const subImgs = imgs.img;
+            const imgPaths = [];
+
+            if(mainImg!=null) {
+                modify+=await tripImgsEntity.update(
+                    {img_path: "/" + mainImg[0].path},
+                    {where : {t_id: trip.t_id, img_main: true}}
+                )
+                console.log("서비스 메인이미지 modify", modify);
+
+                // ✨메인이미지 등록시 db 기존 메인이미지의 이미지경로 수정
+                // let originMainImg = await tripImgsEntity.findOne({
+                //     where:{t_id: trip.t_id, img_main: true}
+                // })
+                // console.log("서비스 originMainImg 검색", originMainImg);
+                // if(originMainImg) {
+                //     originMainImg.img_path= "/" + mainImg[0].path;
+                //     modify+=await originMainImg.save();
+                //     console.log("서비스 originMainImg 경로수정", originMainImg);
+                //     console.log("서비스 메인이미지 modify", modify);
+                //     console.log("서비스 originMainImg 저장",await originMainImg.save());
+                // }
+
+                // modify+=await tripImgsEntity.create({
+                //     t_id: trip.t_id,
+                //     img_path: "/" + mainImg[0].path,
+                //     img_main: true
+                // })
+                imgPaths.push("/"+mainImg[0].path);
+                console.log("서비스 메인이미지 mainImg", mainImg[0]);
+                console.log("서비스 메인이미지 mainImg.path", mainImg[0].path);
+                console.log("서비스 메인이미지 imgPaths", imgPaths);
             }
+             console.log("서비스 mainImg", mainImg);
+
+
+            if(subImgs!=null) {
+                for(const subImg of subImgs) {
+                    console.log("서비스 subImg", subImg);
+                    console.log("서비스 subImgs", subImgs);
+                    modify+=await tripImgsEntity.create({
+                        t_id: trip.t_id,
+                        img_path: "/" + subImg.path,
+                        img_main: false
+                    })
+                    imgPaths.push("/"+subImg.path);
+                    console.log("서비스 서브이미지 imgPaths", imgPaths);
+
+                }
+            }
+            trip.img_path=imgPaths;
+            // 🍒imgs 가 배열일때, 이미지 업로드
+            // const imgPaths=[];
+            // for(const img of imgs) {
+            //     console.log("img.filename",img.filename);
+            //     console.log("img.path",img.path);
+            //     modify+=await tripImgsEntity.create({ // db 에 이미지 추가
+            //         t_id: trip.t_id,
+            //         img_path: "/" + img.path, // img.path : public/img/trip/trip_1684137090730_55.jpeg
+            //         img_main: false
+            //     })
+            //     imgPaths.push("/"+img.path);
+            //     trip.img_path=imgPaths;
+            // }
 
             // delImgId == ti_id 삭제
             if(trip.delImgId!=null) {
@@ -138,11 +193,18 @@ class TripsService {
                     modify+=await tripImgsEntity.destroy({where:{ti_id: trip.delImgId}});
                 }
             }
+
+            // 👀modify 가 실패(0) 인 경우 db 삭제하기
+            if(modify===0){
+                modify+=await tripImgsEntity.destroy({where : {ti_id: trip.t_id}});
+            }
+
             console.log("modify", modify);
             console.log("imgs",imgs);
             console.log("trip", trip);
             console.log("trip.t_id", trip.t_id);
             return modify;
+
         } catch (e) {
             new Error(e);
             console.log(e);

@@ -20,7 +20,8 @@ block content
                         label.w-25
                             input(name="delMainImgId", value=img.ti_id)
                             img.img-thumbnail(src=`${img.img_path.slice(7)}`)
-            input.form-control(type="file", name="img" value=1)
+            input.form-control(type="file", name="mainImg")
+            // input.form-control(type="file", name="img" data-is-main="true")
 
         p
             label 이미지 삭제

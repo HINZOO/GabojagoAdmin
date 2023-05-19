@@ -16,5 +16,17 @@ class TripImgsService {
             new Error(e);
         }
     }
+
+    async modify(main) {
+        try {
+            return await tripImgsEntity.update({
+                where: {t_id: main.t_id}
+            });
+        } catch (e){
+            console.log(e);
+            new Error(e);
+        }
+    }
+
 }
 module.exports=new TripImgsService();

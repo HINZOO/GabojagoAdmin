@@ -18,25 +18,24 @@ describe("tripService test",()=>{
 
 
     test("modify Test",async ()=>{
-        const user={
-            "u_id": "USER02",
-            "pw": "1234",
-            "name": "김영수수정",
-            "nk_name": "영수수정",
-            "email": "kimyoungsoo수정@gmail.com",
-            "birth": "1986-05-25",
-            "phone": "010-1111-3333",
-            "address": "서울특별시 수정구",
-            "detail_address": "수정동동 123-1",
-            "pr_content": "안녕하세요. 저는 웹 개발자 수정 입니다.",
-            "permission": "USER",
-            "mbti": "ISFJ",
-            "img_path": "/public/img/user/1.jpg",
-            "post_time": "2023-04-14 14:07:01",
-            "store_name": "바보스토어2222",
-            "business_id": "1"
+        const trip={
+            "t_id": "1",
+            "category" : "힐링",
+            "delMainImgId" : ['23','124'],
+            "img_path" : [ '/public/img/trip/trip_1684337891120_682.jpg' ],
+            "origin_img_path": [
+                '/public/img/trip/1682993319728_4765.jpeg',
+                '/public/img/trip/trip_1684334934487_682.jpg',
+                '/public/img/trip/trip_1684337891120_682.jpg',
+                '/public/img/trip/trip_1684337891121_39.jpeg',
+                '/public/img/trip/trip_1684338059604_379.jpg',
+                '/public/img/trip/trip_1684472985413_67.jpg'
+            ]
         }
-        let modify = await usersService.modify(user);
+        const imgs = {
+
+        }
+        let modify = await usersService.modify(trip,imgs);
         console.log(modify);
         expect(modify[0]).toBe(1);
     });

@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const tripsService=require("../model/service/TripsService")
 const tripImgsService=require("../model/service/TripImgsService");
@@ -8,6 +8,7 @@ const path=require("path");
 
 // 이미지업로드 multer 미들웨어
 const multer=require("multer");
+const qnaService = require("../model/service/QnasService");
 
 const storage=multer.diskStorage(
     {
@@ -41,7 +42,7 @@ function fileFilter (req, file, cb)  {
 const upload=multer({storage:storage,fileFilter:fileFilter});
 
 // 수정페이지 상세
-router.get('/:tId/update.do',async(req,res)=>{
+router.get("/:tId/update.do",async(req,res)=>{
     const trip=await tripsService.detail(req.params.tId);
     if(trip) {
         res.render("boards/tripUpdate",{trip:trip})
@@ -51,20 +52,24 @@ router.get('/:tId/update.do',async(req,res)=>{
 })
 
 // 수정페이지 처리
-router.post('/update.do', upload.array("img",5), async(req,res)=>{
+router.post("/update.do", upload.fields([{name: "mainImg", maxCount: 1}, {name: "img", maxCount: 5}]), async(req,res)=>{
+// router.post("/update.do", upload.array("img",5), async(req,res)=>{
     console.log("req.file",req.files); // img 로 업로드한 이미지들 // img 는 이미지 업로드 input name
     console.log("req.body",req.body); // POST 요청에서 전달된 데이터를 처리하기 위해 req.body 객체를 추출합니다. //post 방식으로 보내는 파라미터
 
+    // if(!a) => Falsy한 값 // JavaScript에서 false, null, undefined, 0, 빈 문자열(''), NaN..
     // 업로드한 이미지 없을때는 기존이미지들을 img_path 에
     if(!req.body.img_path)req.body.img_path=null; // 업로드한 이미지 없을 때
     req.body.t_id=Number(req.body.t_id);
 
-    // const mainImg = req.file; // 메인 이미지 파일
-    const imgs = req.files; // 서브 이미지 파일들
+    const imgs = req.files; // 서브 이미지 파일들 // mainImg:[{  }], img:[{  }]
     const trip=req.body;
 
-    /*
-    // 🍒db 수정 실패시 업로드한 이미지 삭제 req.files 의 img_path 삭제하기 테스트
+    const mainImg = imgs.mainImg;
+    const subImgs = imgs.img;
+
+
+    /* // 🍒db 수정 실패시 업로드한 이미지 삭제 req.files 의 img_path 삭제하기 테스트
     if(imgs!=null){
         for(const img of imgs){
             console.log("trip 라우터 업로드 img",img);
@@ -77,9 +82,9 @@ router.post('/update.do', upload.array("img",5), async(req,res)=>{
     // 삭제할 서브이미지가 없으면 => 배열 만들어서, 삭제할 메인이미지 추가하기
     // 메인이미지 상태설정 -> true
 
-
     let update=0;
     let delImgs=null;
+
     try {
         // 삭제하려고 체크한 이미지가 있다면
         // modify 서비스에서 db 삭제하기 전에 해당하는 이미지 리스트를 저장해두기
@@ -87,7 +92,8 @@ router.post('/update.do', upload.array("img",5), async(req,res)=>{
             delImgs=await tripsService.imgList(trip.delImgId);
             console.log("trip 라우터 delImgs",delImgs)
         }
-        update=await tripsService.modify(trip,imgs);
+        update=await tripsService.modify(trip,imgs); // imgs : mainImg [], img []
+
     }catch (e) {
         console.error(e);
     }
@@ -115,16 +121,35 @@ router.post('/update.do', upload.array("img",5), async(req,res)=>{
                 await fs.unlink("."+img.img_path); // /public/img/trip/trip_1684334934491_265.jpg'
             }
         }
+        // 메인이미지 등록한 경우 => 기존 메인이미지 파일 삭제
+        // 메인이미지가 2개가 되면, 첫번째 파일은 삭제?
+        if(trip.delMainImgId.length>0) {
+        // if(mainImg.length>0) {
+            console.log("라우터 메인이미지 등록 mainImg", mainImg);
+            // await fs.unlink("/"+mainImg[0].path);
+        }
     }
-    else{
-        // db 수정 실패시 업로드한 이미지 삭제
+    else{ // db 수정 실패시 업로드한 이미지 삭제
         try { // req.files 의 img_path 삭제하기
             if(imgs!=null){
-                for(const img of imgs){
-                    console.log("trip 라우터 업로드 img",img);
-                    console.log("trip 라우터 업로드 img.path", img.path);
-                    await fs.unlink("."+img.path);
+                if(subImgs!=null){
+                    for(const subImg of subImgs) {
+                        console.log("라우터 subImg", subImg);
+                        await fs.unlink("."+subImg.path);
+                    }
+                } else if (mainImg!=null) {
+                    console.log("라우터 mainImg", mainImg);
+                    // await fs.unlink("./"+mainImg[0].path);
                 }
+
+
+
+
+                // for(const img of imgs){
+                //     console.log("trip 라우터 업로드 img",img);
+                //     console.log("trip 라우터 업로드 img.path", img.path);
+                //     await fs.unlink("."+img.path);
+                // }
             }
         }catch (e) {
             console.error(e)
@@ -136,7 +161,7 @@ router.post('/update.do', upload.array("img",5), async(req,res)=>{
 })
 
 
-router.get('/list.do', async (req,res)=>{
+router.get("/list.do", async (req,res)=>{
     req.query.page = parseInt(req.query.page) || 1;
     req.query.orderField = req.query.orderField || "post_time";
     req.query.orderDirect = req.query.orderDirect || "DESC";
@@ -146,7 +171,7 @@ router.get('/list.do', async (req,res)=>{
 });
 
 // 상세
-router.get('/:tId/detail.do',async(req,res)=>{
+router.get("/:tId/detail.do",async(req,res)=>{
    const trip=await tripsService.detail(req.params.tId);
     console.log("trip 안나와?",trip)
 
