@@ -5,10 +5,8 @@ const tripImgsService=require("../model/service/TripImgsService");
 const {Logger} = require("sequelize/lib/utils/logger");
 const fs = require("fs/promises");
 const path=require("path");
-
 // 이미지업로드 multer 미들웨어
 const multer=require("multer");
-const qnaService = require("../model/service/QnasService");
 
 const storage=multer.diskStorage(
     {
@@ -53,7 +51,6 @@ router.get("/:tId/update.do",async(req,res)=>{
 
 // 수정페이지 처리
 router.post("/update.do", upload.fields([{name: "mainImg", maxCount: 1}, {name: "img", maxCount: 5}]), async(req,res)=>{
-// router.post("/update.do", upload.array("img",5), async(req,res)=>{
     console.log("req.file",req.files); // img 로 업로드한 이미지들 // img 는 이미지 업로드 input name
     console.log("req.body",req.body); // POST 요청에서 전달된 데이터를 처리하기 위해 req.body 객체를 추출합니다. //post 방식으로 보내는 파라미터
 
@@ -64,26 +61,16 @@ router.post("/update.do", upload.fields([{name: "mainImg", maxCount: 1}, {name: 
 
     const imgs = req.files; // 서브 이미지 파일들 // mainImg:[{  }], img:[{  }]
     const trip=req.body;
-
     const mainImg = imgs.mainImg;
     const subImgs = imgs.img;
 
-
-    /* // 🍒db 수정 실패시 업로드한 이미지 삭제 req.files 의 img_path 삭제하기 테스트
-    if(imgs!=null){
-        for(const img of imgs){
-            console.log("trip 라우터 업로드 img",img);
-            console.log("trip 라우터 업로드 img.path", img.path);
-        }
-    }*/
-
-    // 메인이미지가 있을때
-    // 서브이미지가 없으면 => 배열만들어서, 메인이미지 추가하기
-    // 삭제할 서브이미지가 없으면 => 배열 만들어서, 삭제할 메인이미지 추가하기
-    // 메인이미지 상태설정 -> true
-
     let update=0;
     let delImgs=null;
+
+    // 기존 메인이미지
+    const originMainImg = await tripImgsService.detail(trip.delMainImgId);
+    let originMainImgPath = "." + originMainImg.img_path;
+    console.log("라우터 기존메인이미지 originMainImg", originMainImg.img_path); //  /public/img/trip/trip_1684482288206_94.jpg
 
     try {
         // 삭제하려고 체크한 이미지가 있다면
@@ -92,66 +79,58 @@ router.post("/update.do", upload.fields([{name: "mainImg", maxCount: 1}, {name: 
             delImgs=await tripsService.imgList(trip.delImgId);
             console.log("trip 라우터 delImgs",delImgs)
         }
-        update=await tripsService.modify(trip,imgs); // imgs : mainImg [], img []
-
+        update=await tripsService.modify(trip,imgs); // db 삭제,수정.. // imgs : mainImg [], img []
     }catch (e) {
         console.error(e);
     }
     console.log("라우터 trip", trip);
     console.log("update", update);
 
-    // 수정이 성공하고 (db 삭제 또는 추가) => 파일 삭제 또는 추가
-    // db 추가(update>0)(서비스에서) => 파일추가(라우터) (ok)
-    // db 삭제(update>0)(서비스에서) => 파일삭제(라우터)
-
-    // 삭제할 이미지 체크 delImgId -> 실행 -> delImgId 사라짐
-    // 그러면 delImgId 가 없어지고 나서, 어떻게 delImgId 에 해당되는 이미지 경로의 실제 파일을 삭제할 것인가
-    // db 에서 삭제하기전에 delImgId 에 해당되는 이미지 경로를 변수에 담아놓고 => tripService 에 imgList 서비스 만들기
-    // db 삭제 성공하면 이후에 해당 경로를 파일 삭제하기
-
     if(update>0){ // db 수정 성공!
         console.log("수정 성공");
-        // 삭제하려는 이미지가 있는 경우 => 실제 파일 삭제
+        // 삭제하려는 서브 이미지가 있는 경우 => 👀실제 파일 삭제
         if(delImgs!=null) {
-            // delImgs 가 배열임을 체크안해도, delImgs 가 1개인 경우에도 반복문 작동에 이상없음
-            for(const img of delImgs){
+            for(const img of delImgs){ // delImgs 가 배열임을 체크안해도, delImgs 가 1개인 경우에도 반복문 작동에 이상없음
                 console.log("trip 라우터 삭제할 img", img);
                 console.log("trip 라우터 삭제할 delImgs", delImgs);
                 console.log("img.img_path", img.img_path);
                 await fs.unlink("."+img.img_path); // /public/img/trip/trip_1684334934491_265.jpg'
             }
         }
-        // 메인이미지 등록한 경우 => 기존 메인이미지 파일 삭제
-        // 메인이미지가 2개가 되면, 첫번째 파일은 삭제?
-        if(trip.delMainImgId.length>0) {
-        // if(mainImg.length>0) {
-            console.log("라우터 메인이미지 등록 mainImg", mainImg);
-            // await fs.unlink("/"+mainImg[0].path);
+        // 메인이미지 등록한 경우 => 👀기존 메인이미지 실제 파일 경로 수정
+        // 업로드(modify)하기 전 기존메인이미지의 파일경로를 보관하고 있어야 한다 => originMainImg 변수선언
+        if(mainImg) { // 새로등록한 메인이미지 있으면
+            const newPath = "./"+mainImg[0].path
+            // 기존 메인이미지 실제파일 삭제
+            await fs.unlink(originMainImgPath, async (err)=>{
+                if(err) {
+                    console.error("기존 메인이미지 파일삭제 실패", err);
+                } else { // 새로등록한 메인이미지 경로로 실제파일 경로 변경하기
+                    await fs.rename(newPath, originMainImgPath, (err)=>{
+                       if(err){
+                           console.error("이미지 파일 변경실패",err);
+                       } else {
+                           console.log("이미지 파일 변경 성공")
+                       }
+                    });
+                }
+            });
         }
-    }
+    } // -- update>0
     else{ // db 수정 실패시 업로드한 이미지 삭제
         try { // req.files 의 img_path 삭제하기
             if(imgs!=null){
                 if(subImgs!=null){
                     for(const subImg of subImgs) {
                         console.log("라우터 subImg", subImg);
-                        await fs.unlink("."+subImg.path);
+                        await fs.unlink("./"+subImg.path);
                     }
                 } else if (mainImg!=null) {
                     console.log("라우터 mainImg", mainImg);
-                    // await fs.unlink("./"+mainImg[0].path);
+                    await fs.unlink("./"+mainImg[0].path);
                 }
-
-
-
-
-                // for(const img of imgs){
-                //     console.log("trip 라우터 업로드 img",img);
-                //     console.log("trip 라우터 업로드 img.path", img.path);
-                //     await fs.unlink("."+img.path);
-                // }
             }
-        }catch (e) {
+        } catch (e) {
             console.error(e)
         }
     }
@@ -173,7 +152,6 @@ router.get("/list.do", async (req,res)=>{
 // 상세
 router.get("/:tId/detail.do",async(req,res)=>{
    const trip=await tripsService.detail(req.params.tId);
-    console.log("trip 안나와?",trip)
 
    if(trip){
        res.render("boards/tripDetail",{trip:trip,params:req.query})
@@ -199,14 +177,5 @@ router.get("/:tId/delete.do",async (req,res)=>{
         res.redirect(`/trips/${req.params.tId}/detail.do`);
     }
 })
-
-function nullifValues(obj) {
-    const result = {};
-    for (const [key, value] of Object.entries(obj)) {
-        result[key] = (value === null || value === undefined ) ? null : value;
-        // result[key] = (value === null || value === undefined || value.trim() === '') ? null : value;
-    }
-    return result;
-}
 
 module.exports=router;

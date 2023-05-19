@@ -2,7 +2,7 @@ extends ../layout
 
 block content
     form.border.m-auto(method="post", action="/trips/update.do", enctype="multipart/form-data", style="width: 600px")
-        input(name="t_id", value=trip.t_id)
+        input(type="hidden" name="t_id", value=trip.t_id)
         h3.my-4 여행지 정보수정
         p.form-floating
             select.form-control.form-select(name='category', value=trip.category)
@@ -18,11 +18,9 @@ block content
                 -for(img of trip.imgs)
                     -if(img.img_main===true)
                         label.w-25
-                            input(name="delMainImgId", value=img.ti_id)
+                            input(type="hidden" name="delMainImgId", value=img.ti_id)
                             img.img-thumbnail(src=`${img.img_path.slice(7)}`)
             input.form-control(type="file", name="mainImg")
-            // input.form-control(type="file", name="img" data-is-main="true")
-
         p
             label 이미지 삭제
             div.form-control
