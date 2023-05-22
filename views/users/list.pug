@@ -18,15 +18,15 @@ block content
         tbody
             each user in users
                 tr
-                    th(scope="row") #{user.u_id}
-                    th(scope="row") #{user.name}
-                    th(scope="row") #{user.birth}
-                    th(scope="row") #{user.post_time.toLocaleDateString("ko")}
-                    th(scope="row") #{user.address}
-                    th(scope="row") #{user.phone}
-                    th(scope="row") 마일리지
-                    th(scope="row") #{user.permission}
-                    th(scope="row")
+                    td(scope="row") #{user.u_id}
+                    td(scope="row") #{user.name}
+                    td(scope="row") #{user.birth}
+                    td(scope="row") #{user.post_time.toLocaleDateString("ko")}
+                    td(scope="row") #{user.address}
+                    td(scope="row") #{user.phone}
+                    td(scope="row") 마일리지
+                    td(scope="row") #{user.permission}
+                    td(scope="row")
                         a.btn.btn-sm.btn-outline-dark.me-1(href=`/users/${user.u_id}/detail.do`) 상세
                         a.btn.btn-sm.btn-outline-danger(href=`/users/${user.u_id}/delete.do`) 삭제
 

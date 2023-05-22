@@ -64,6 +64,17 @@ router.post("/update.do", upload.fields([{name: "mainImg", maxCount: 1}, {name: 
     const mainImg = imgs.mainImg;
     const subImgs = imgs.img;
 
+    // mbti 체크
+    const keys = ['istj', 'istp', 'isfj', 'isfp', 'intj', 'intp', 'infj', 'infp', 'estj', 'estp', 'esfj', 'esfp', 'entj', 'entp', 'enfj', 'enfp'];
+    // 🍒Pug 템플릿에서 체크박스의 체크 여부를 'on' 으로 표시하기 때문에(req.body 에 'on' 으로 넘어옴) 값을 1로 변환
+    keys.forEach(key => {
+        if(trip[key] === 'on') {
+            trip[key] = true;
+        } else {
+            trip[key] = false; // 🍒아닌 경우 반드시 false 정의 해야지 pug 템플릿에서 체크박스 체크안됨
+        }
+    });
+
     let update=0;
     let delImgs=null;
 

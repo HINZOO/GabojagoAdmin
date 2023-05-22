@@ -103,7 +103,7 @@ router.post("/update.do", async (req,res)=>{
     console.error(e)
   }
   if(update>0){
-    req.flash(success,"수정에 성공하였습니다.")
+    // req.flash(success,"수정에 성공하였습니다.")
     res.redirect(`/users/${req.body.u_id}/detail.do`)
   }else{
 

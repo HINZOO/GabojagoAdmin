@@ -107,6 +107,8 @@ class TripsService {
 
     async modify(trip,imgs) { // imgs : 라우터 req.files (업로드한 이미지 파일)
         let modify = 0;
+
+        console.log("서비스 modify trip", trip);
         try {
             modify += await tripsEntity.update(
                 trip,

@@ -13,11 +13,11 @@ block content
         tbody
             each comm in comms
                 tr
-                    th(scope="row") #{comm.c_id}
-                    th(scope="row")
+                    td(scope="row") #{comm.c_id}
+                    td(scope="row")
                         a(href=`/trips/${comm.c_id}/detail.do`).link-danger.text-dark #{comm.title}
-                    th(scope="row") #{comm.post_time.toLocaleString("ko")}
-                    th(scope="row")
+                    td(scope="row") #{comm.post_time.toLocaleString("ko")}
+                    td(scope="row")
                         a.btn.btn-sm.btn-outline-dark.me-1(href=`/comms/${comm.c_id}/detail.do`) 상세
                         a.btn.btn-sm.btn-outline-danger(href=`/comms/${comm.c_id}/delete.do`) 삭제
 

@@ -2,9 +2,8 @@ extends ../layout
 
 block content
     div.my-5
-        div.m-auto(style="width: 600px;")
-            h3.my-4
-                span 여행지 상세정보
+        div.m-auto(style="width: 500px;")
+            h3.my-4 여행지 상세정보
             div
                 div.card
                     div.card-body
@@ -26,7 +25,7 @@ block content
                             span.col.ms-3 #{trip.phone}
                         p.row.d-flex.align-items-center
                             span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 홈페이지
-                            span.col.ms-3 #{trip.url_address}
+                            a.col.ms-3.text-dark.link-danger(href=`${trip.url_address}`) #{trip.url_address}
                         hr
                         p.row.d-flex.align-items-center
                             span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 소개글
@@ -38,7 +37,7 @@ block content
                             -for (t of trip.tags)
                                 span.btn.disabled.text-dark.btn-outline-secondary.btn-sm.rounded-5.m-1 #{t.tag}
                         p.row.d-flex.align-items-center
-                            span.col-2.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 메인 이미지
+                            span.col-auto.text-center.border.p-1.px-2.bg-dark.bg-opacity-10.rounded-5 메인 이미지
                         p.form-control
                             -for (img of trip.imgs)
                                 -if(img.img_main===true)

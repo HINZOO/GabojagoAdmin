@@ -1,9 +1,12 @@
 extends ../layout
 
 block content
-    form.border.m-auto(method="post", action="/trips/update.do", enctype="multipart/form-data", style="width: 600px")
+    form.my-5.m-auto(method="post", action="/trips/update.do", enctype="multipart/form-data", style="width: 500px")
         input(type="hidden" name="t_id", value=trip.t_id)
-        h3.my-4 여행지 정보수정
+        h3.my-4 여행지 수정
+        p.form-floating
+            input.form-control(readonly type="text" name="u_id" value=trip.u_id)
+            label 아이디(글쓴이)
         p.form-floating
             select.form-control.form-select(name='category', value=trip.category)
                 option(value='힐링', selected=(trip.category === '힐링')) 힐링
@@ -12,20 +15,73 @@ block content
                 option(value='레저', selected=(trip.category === '레저')) 레저
                 option(value='박물관', selected=(trip.category === '박물관')) 박물관
             label 카테고리
+        p.form-floating
+            select.form-control.form-select(name="area", value=trip.area)
+                option(value='서울', selected=(trip.area === '서울')) 서울
+                option(value='인천', selected=(trip.area === '인천')) 인천
+                option(value='대전', selected=(trip.area === '대전')) 대전
+                option(value='광주', selected=(trip.area === '광주')) 광주
+                option(value='대구', selected=(trip.area === '대구')) 대구
+                option(value='울산', selected=(trip.area === '울산')) 울산
+                option(value='부산', selected=(trip.area === '부산')) 부산
+                option(value='세종', selected=(trip.area === '세종')) 세종
+                option(value='경기', selected=(trip.area === '경기')) 경기
+                option(value='강원', selected=(trip.area === '강원')) 강원
+                option(value='충북', selected=(trip.area === '충북')) 충북
+                option(value='충남', selected=(trip.area === '충남')) 충남
+                option(value='전북', selected=(trip.area === '전북')) 전북
+                option(value='전남', selected=(trip.area === '전남')) 전남
+                option(value='경북', selected=(trip.area === '경북')) 경북
+                option(value='경남', selected=(trip.area === '경남')) 경남
+                option(value='제주', selected=(trip.area === '제주')) 제주
+            label 지역
+        p.form-floating
+            input.form-control(type="text" name="title" value=trip.title)
+            label 여행제목
+        p.form-floating
+            input.form-control(type="text" name="address" value=trip.address)
+            label 주소
+        p.form-floating
+            input.form-control(type="text" name="phone" value=trip.phone)
+            label 연락처
+        p.form-floating
+            input.form-control(type="text" name="url_address" value=trip.url_address)
+            label 홈페이지
         p
-            label 메인이미지 변경
-            div.form-control
-                -for(img of trip.imgs)
-                    -if(img.img_main===true)
+            label.form-label 소개글
+            textarea.form-control(name="content" rows="4" style="resize: none;") #{trip.content}
+
+        // 태그 삭제
+        // 태그 등록
+        div
+            label.form-label 태그삭제
+            p.form-control
+                -for(t of trip.tags)
+                    input.btn-check(id=t.tag name="delTag" value=t.tag type="checkbox" autocomplete="off")
+                    label.btn.btn-outline-secondary.btn-sm.rounded-5.m-1(for=t.tag)
+                        span #{t.tag}
+        p
+            label 태그등록
+            include /views/boards/tagsInput
+
+            //<label class="form-label">태그등록</label>
+            //<th:block th:include="/trip/tagsinput.html"></th:block>
+            //</p>
+
+        p.mb-0
+            label.form-label 메인이미지 변경
+            p.form-control
+                -for (img of trip.imgs)
+                    -if (img.img_main === true)
                         label.w-25
                             input(type="hidden" name="delMainImgId", value=img.ti_id)
                             img.img-thumbnail(src=`${img.img_path.slice(7)}`)
             input.form-control(type="file", name="mainImg")
-        p
-            label 이미지 삭제
-            div.form-control
-                -for(img of trip.imgs)
-                    -if(img.img_main===false)
+        p.mb-0
+            label.form-label 이미지 삭제
+            p.form-control
+                -for (img of trip.imgs)
+                    -if (img.img_main === false)
                         label.w-25
                             input(type="hidden" name="origin_img_path" value=img.img_path)
                             input.delImgInput(type="checkbox", name="delImgId", value=img.ti_id)
@@ -35,7 +91,25 @@ block content
                 span 이미지
                 span.border.ms-1.rounded-1.text-white.d-flex.justify-content-center.align-items-center(style="width:20px; height:20px") +
 
-        p.text-end
+        // mbti
+        div
+            label mbti
+
+
+            p.d-flex.justify-content-around
+                -const keysI = ['istj', 'istp', 'isfj', 'isfp', 'intj', 'intp', 'infj', 'infp'];
+                each key in keysI
+                    label
+                        input.me-2(type="checkbox" name=`${key}` checked=trip[key])
+                        | #{key}
+
+            p.d-flex.justify-content-around
+                -const keysE = ['estj', 'estp', 'esfj', 'esfp', 'entj', 'entp', 'enfj', 'enfp'];
+                each key in keysE
+                    label
+                        input.me-2(type="checkbox" name=`${key}` checked=trip[key])
+                        | #{key}
+        p.text-end.my-5
             a.btn.btn-outline-dark(href="/trips/list.do") 취소
             button.btn.btn-outline-danger.ms-2(type="submit") 등록
 
