@@ -3,11 +3,13 @@ const tripsEntity = require("../entity/TripEntity")(sequelize);
 // trip 게시글과 해시태그를 조인하기!
 const tripHashTagEntity = require("../entity/TripHashTagEntity")(sequelize);
 const tripImgsEntity = require("../entity/TripImgsEntity")(sequelize);
+const hashTagEntity = require("../entity/HashTagEntity")(sequelize);
+
 const PageVo = require("../vo/PageVo");
 const {Op} = require("sequelize");
 
 // trip 게시글 tripHashTag 해시태그 조인 관계 1 : N
-// detail 안에서 선언을 하니, detail 을 호출할때마다 실행? 이되서 별칭이 중복된다는 에러가 발생 => detail 서비스 바깥에서 선언
+// detail 안에서 선언을 하니, detail 을 호출할 때마다 실행? 이되서 별칭이 중복된다는 에러가 발생 => detail 서비스 바깥에서 선언
 tripsEntity.hasMany(tripHashTagEntity, {
     foreignKey: "t_id", // trip 을 참조하는 tripHashTag 의 외래키
     as: "tags" // tripHashTag 를 불러왔을때, trip 에 생성되는 필드이름
@@ -49,33 +51,6 @@ class TripsService {
         }
     }
 
-    // 삭제할 이미지 리스트
-    async imgList(delImgId) {
-        let imgList=null;
-        let img=null;
-        if(delImgId!=null){
-            imgList=[];
-            if(Array.isArray(delImgId) && delImgId.length > 0) {
-                // id 가 배열임을 체크해야하는 이유! 안하면, id 2글자이상인 경우 한자리로 나뉜다.
-                // ex) '77' -> id : '7'
-                for (const id of delImgId) {
-                    // let img=await tripImgsEntity.findByPk(id);
-                    img = await tripImgsEntity.findOne({where: {ti_id: id}});
-                    imgList.push(img);
-                    // const img = await tripImgsEntity.findOne({where: {ti_id: id}});
-                    // console.log("trip 서비스 _ 삭제할 img 상세", img);
-                    console.log("서비스 _ delImgId 여러개 img", img);
-                    console.log("서비스 _ delImgId 여러개 imgList", imgList);
-                }
-            } else {
-                img = await tripImgsEntity.findOne({where: {ti_id: delImgId}});
-                imgList.push(img);
-                console.log("서비스 _ delImgId 1개 img", img);
-                console.log("서비스 _ delImgId 1개 imgList", imgList);
-            }
-        }
-        return imgList;
-    }
 
     //상세
     async detail(tId) {
@@ -108,7 +83,6 @@ class TripsService {
     async modify(trip,imgs) { // imgs : 라우터 req.files (업로드한 이미지 파일)
         let modify = 0;
 
-        console.log("서비스 modify trip", trip);
         try {
             modify += await tripsEntity.update(
                 trip,
@@ -117,6 +91,7 @@ class TripsService {
             // 🍌00 -> await 결과를 parseInt 함수이용해서 문자열 '0' => 정수로 변경 => 0
             console.log("서비스 trip 수정 modify",modify);
             // 👀imgs 가 없는 경우 null 처리하기!
+            // 🍒 이미지 등록 & 삭제
             if(!imgs) imgs=null;
             const mainImg = imgs.mainImg;
             const subImgs = imgs.img;
@@ -146,7 +121,7 @@ class TripsService {
                         t_id: trip.t_id,
                         img_path: "/" + subImg.path,
                         img_main: false
-                    }) // 👀 create 의 반환값은 생성된 객체 => 생성의 성공여부 0, 1 이 아니다!!
+                    }) // 👀 create 의 반환값은 생성된 객체 => 생성의 성공여부 0, 1 이 아니다!! => 생성된 객체임
                     console.log("trip 서비스_서브이미지 db 등록성공 create", dbSubImg);
                     if(dbSubImg!=null) { // create 로 이미지가 생성이 성공되면 값이 null 이 아니다!!
                         modify+=1; // 이때 생성이 성공된 것을 modify 에 1을 더해준다!
@@ -167,6 +142,59 @@ class TripsService {
                     modify+=await tripImgsEntity.destroy({where:{ti_id: trip.delImgId}});
                 }
             }
+
+            // 해시태그 등록 함수 _ 중복코드
+            async function createHashTag(tag) {
+                const hashTag = await hashTagEntity.findOne({ where: { tag: tag } });
+                if (hashTag == null) {
+                    const newHashTag = await hashTagEntity.create({ tag: tag });
+                    if (newHashTag != null) modify += 1;
+                }
+                const tripHashTag = tripHashTagEntity.create({
+                    t_id: trip.t_id,
+                    tag: tag
+                })
+                if(tripHashTag!=null) modify+=1;
+            }
+
+            async function deleteHashTag(delTag) {
+                await tripHashTagEntity.destroy({
+                    where: {
+                        t_id : trip.t_id,
+                        tag: delTag
+                    }
+                })
+                modify+=1;
+            }
+
+            const tags=trip.tag;
+            const delTags=trip.delTag;
+
+            // 🍒 해시태그  db 등록 & 삭제
+            if(tags!=null) {
+                if(Array.isArray(tags) && tags.length > 0) { // 배열인 경우
+                    for(const tag of tags) { // 반복문
+                        // 해시태그 1개 등록인 경우 "제주반려" -> '제','주','반','려' 로 등록됨
+                        // 1개 등록 시 등록처리 로직 추가
+                        await createHashTag(tag);
+                    }
+                } else { // 배열이 아닌 경우
+                    const tag = tags;
+                    await createHashTag(tag);
+                }
+            }
+
+            if(delTags!=null) {
+                if(Array.isArray(delTags) && delTags.length > 0) {
+                    for(const delTag of delTags) {
+                        await deleteHashTag(delTag);
+                    }
+                } else {
+                    const delTag = delTags;
+                    await deleteHashTag(delTag);
+                }
+            }
+
             return modify;
 
         } catch (e) {
@@ -178,11 +206,12 @@ class TripsService {
 
 
     async remove(tId) {
+        console.log("서비스 tId",tId);
         try {
             let del = await tripsEntity.destroy({where: {t_id: tId}})
-
-            console.log("trip",trip);
+            console.log("서비스 del", del)
             return del;
+
         } catch (e) {
             new Error(e);
         }
@@ -197,5 +226,4 @@ class TripsService {
     }
 }
 
-// module.exports=TripsService;
 module.exports = new TripsService();

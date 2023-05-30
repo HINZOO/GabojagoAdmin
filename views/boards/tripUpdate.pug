@@ -50,9 +50,6 @@ block content
         p
             label.form-label 소개글
             textarea.form-control(name="content" rows="4" style="resize: none;") #{trip.content}
-
-        // 태그 삭제
-        // 태그 등록
         div
             label.form-label 태그삭제
             p.form-control
@@ -62,12 +59,7 @@ block content
                         span #{t.tag}
         p
             label 태그등록
-            include /views/boards/tagsInput
-
-            //<label class="form-label">태그등록</label>
-            //<th:block th:include="/trip/tagsinput.html"></th:block>
-            //</p>
-
+            include tagsInput
         p.mb-0
             label.form-label 메인이미지 변경
             p.form-control
@@ -90,12 +82,8 @@ block content
             button.btn.btn-danger.w-100.d-flex.justify-content-center.align-items-center(id="imgAddBtn", type="button")
                 span 이미지
                 span.border.ms-1.rounded-1.text-white.d-flex.justify-content-center.align-items-center(style="width:20px; height:20px") +
-
-        // mbti
         div
             label mbti
-
-
             p.d-flex.justify-content-around
                 -const keysI = ['istj', 'istp', 'isfj', 'isfp', 'intj', 'intp', 'infj', 'infp'];
                 each key in keysI

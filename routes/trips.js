@@ -87,7 +87,7 @@ router.post("/update.do", upload.fields([{name: "mainImg", maxCount: 1}, {name: 
         // 삭제하려고 체크한 이미지가 있다면
         // modify 서비스에서 db 삭제하기 전에 해당하는 이미지 리스트를 저장해두기
         if(trip.delImgId!=null) {
-            delImgs=await tripsService.imgList(trip.delImgId);
+            delImgs=await tripImgsService.imgList(trip.delImgId);
             console.log("trip 라우터 delImgs",delImgs)
         }
         update=await tripsService.modify(trip,imgs); // db 삭제,수정.. // imgs : mainImg [], img []
@@ -173,20 +173,52 @@ router.get("/:tId/detail.do",async(req,res)=>{
 });
 
 
-
-
 router.get("/:tId/delete.do",async (req,res)=>{
     let del=0;
+    let delImgs=[];
+    // 🍎req.params => { tId: '5'} 객체 형태로 tId 를 가지고 있다
+    const tId = req.params.tId;
+    const trip = await tripsService.detail(tId);
+    console.log("tId",req.params.tId);
+    console.log("trip",trip);
+    console.log("tripImgs",trip.imgs);
+    const imgs=trip.imgs; // 복수
+    let delImgObj;
+
+    if(imgs!=null){
+        for(const img of imgs) {
+            const imgPath=img.img_path;
+            console.log("imgPath",imgPath); //  /public/img/trip/1682993272526_8304.jpeg
+            delImgs.push(imgPath);
+        }
+            console.log("delImgs",delImgs);
+    }
+
     try{
-        del=await tripsService.remove(req.params.tId);
+        delImgObj = await tripImgsService.imgPathList(delImgs); // 이미지 경로를 이용한 이미지 객체를 저장
+        console.log("삭제 delImgObj",delImgObj);
+        del=await tripsService.remove(tId); // db 삭제
+        console.log("del",del);
     }catch (e){
         console.error(e);
     }
-    if(del>0){
-        res.redirect("/trips/list.do")
-    }else{
-        res.redirect(`/trips/${req.params.tId}/detail.do`);
+    if(del>0){ // db 삭제 성공시, 실제 이미지 파일 삭제하기
+        if(delImgObj!=null) {
+            for (const delImg of delImgObj) {
+                console.log("delImg",delImg);
+                console.log("delImg img_path",delImg.img_path); // /public/img/trip/1685198954428_953.jpeg
+                try {
+                    await fs.unlink("."+delImg.img_path);
+                    console.log("이미지파일 삭제", delImg.img_path);
+                } catch(e) {
+                    console.error("이미지파일 삭제실패:", delImg.img_path);
+                    console.error(e);
+                }
+            }
+        }
     }
+    res.redirect("/trips/list.do");
+
 })
 
 module.exports=router;

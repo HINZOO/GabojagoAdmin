@@ -28,7 +28,7 @@ module.exports=(sequelize)=>{
         }
     },{
        timestamps:false,
-       tableName: 'trip_hashtags'
+       tableName: 'trip_hashtags',
     });
     return tripHashTagEntity;
 };

@@ -16,6 +16,7 @@ const qnasRouter=require('./routes/qnas');
 const qnaReplysRouter=require('./routes/replys');
 const tripsRouter = require('./routes/trips');
 const commsRouter = require('./routes/comms');
+const hashtagsRouter = require('./routes/hashtags');
 
 
 // const userService = require("./model/service/UsersService");
@@ -88,6 +89,7 @@ app.use('/qnas', qnasRouter);
 app.use('/qnas/replys',qnaReplysRouter);
 app.use('/trips', tripsRouter);
 app.use('/comms', commsRouter);
+app.use('/hashtag', hashtagsRouter);
 
 
 // catch 404 and forward to error handler
